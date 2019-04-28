@@ -32,7 +32,6 @@
 
     <!-- <script src="../images/polyfill.js"></script> -->
     <!-- <script src="../images/axios.js"></script> -->
-    <!-- <script src="../images/jquery.js"></script> -->
     <!-- <script src="../images/velocity.min.js"></script> -->
     <script src="../images/vue.js"></script>
     <script>
@@ -43,8 +42,11 @@
 
 <body>
     <!-- 内容   START -->
-    <div class="main_body" onmousedown="mouseDown(event)">
+    <div id="app" class="content" onmousedown="mouseDown(event)">
+        <header-component></header-component>
     </div>
+    <script src="../images/component.js"></script>
+    <script src="../images/base.js"></script>
 </body>
 
 </html>
