@@ -1,0 +1,23 @@
+{
+  "name": "taoquanquan_vuecomponent",
+  "version": "1.0.0",
+  "description": "淘券券vue组件化",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lxylixianying/taoquanquan_vuecomponent.git"
+  },
+  "author": "lxy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lxylixianying/taoquanquan_vuecomponent/issues"
+  },
+  "homepage": "https://github.com/lxylixianying/taoquanquan_vuecomponent#readme",
+  "dependencies": {
+    "browser-sync": "^2.26.5",
+    "gulp": "^4.0.1"
+  }
+}
