@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "d451722dce0abdb3f129";
+/******/ 	var hotCurrentHash = "49c3862d957ced9f5a83";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -813,7 +813,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _com
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  name: \"HeaderComponent\",\n  props: {}\n});\n\n//# sourceURL=webpack:///./src/components/header.vue?./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  name: \"HeaderComponent\",\n  props: {}\n});\n\n//# sourceURL=webpack:///./src/components/header.vue?./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -881,7 +881,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"header\" })\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/components/header.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"header\" }, [\n    _c(\n      \"div\",\n      {\n        staticClass: \"ceil_box js_ceil_box\",\n        class: { ceil_fixed: _vm.is_fixed }\n      },\n      [\n        _c(\"div\", { staticClass: \"header_logo\" }, [\n          _c(\n            \"a\",\n            {\n              directives: [\n                {\n                  name: \"show\",\n                  rawName: \"v-show\",\n                  value: _vm.is_show,\n                  expression: \"is_show\"\n                }\n              ],\n              staticClass: \"logo_box\",\n              attrs: { href: \"main.html\" }\n            },\n            [_c(\"img\", { attrs: { src: __webpack_require__(/*! ../images/logo.png */ \"./src/images/logo.png\") } })]\n          ),\n          _vm._v(\" \"),\n          _c(\n            \"form\",\n            {\n              staticClass: \"search_input js_search_input\",\n              class: { no_margin: !_vm.is_show },\n              attrs: { onsubmit: \"return search()\" }\n            },\n            [\n              _c(\"input\", {\n                directives: [\n                  {\n                    name: \"model\",\n                    rawName: \"v-model\",\n                    value: _vm.search_word,\n                    expression: \"search_word\"\n                  }\n                ],\n                attrs: { placeholder: \"商品标题、关键字\" },\n                domProps: { value: _vm.search_word },\n                on: {\n                  input: function($event) {\n                    if ($event.target.composing) {\n                      return\n                    }\n                    _vm.search_word = $event.target.value\n                  }\n                }\n              }),\n              _vm._v(\" \"),\n              _c(\"i\", {\n                staticClass: \"icon-font i-search-pc\",\n                on: { click: _vm.search }\n              })\n            ]\n          )\n        ])\n      ]\n    ),\n    _vm._v(\" \"),\n    _c(\"p\", {\n      directives: [\n        {\n          name: \"show\",\n          rawName: \"v-show\",\n          value: _vm.is_show,\n          expression: \"is_show\"\n        }\n      ],\n      staticClass: \"ceil_filler js_ceil_filler\"\n    }),\n    _vm._v(\" \"),\n    _vm._m(0)\n  ])\n}\nvar staticRenderFns = [\n  function() {\n    var _vm = this\n    var _h = _vm.$createElement\n    var _c = _vm._self._c || _h\n    return _c(\"div\", { staticClass: \"header_btns\" }, [\n      _c(\"p\", { staticClass: \"btn_box\" }, [\n        _c(\"a\", { staticClass: \"cur all\", attrs: { href: \"main.html\" } }, [\n          _vm._v(\"全网商品\")\n        ]),\n        _vm._v(\" \"),\n        _c(\"a\", { staticClass: \"bargain\", attrs: { href: \"bargain.html\" } }, [\n          _vm._v(\"特惠商品\")\n        ]),\n        _vm._v(\" \"),\n        _c(\"a\", { staticClass: \"hundred\", attrs: { href: \"hundred.html\" } }, [\n          _vm._v(\"百元精品\")\n        ])\n      ])\n    ])\n  }\n]\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/components/header.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -1001,6 +1001,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.esm.js\");\n/* harmony import */ var _app_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../app.vue */ \"./src/app.vue\");\n\n // import App from '../../app.vue'\n// 鼠标按下事件（显示或隐藏侧边栏）   开始\n\nfunction mouseDown(event) {// var point = event || window.event;\n  // var screen_width = document.body.clientWidth;\n  // if (screen_width < 992 && screen_width - point.clientX > 300 && event.target != js_sort_way.$refs.js_show_side) {\n  //     console.log('在侧栏外');\n  //     js_sort_way.hideSide();\n  // }\n  // // if (event.target == js_sort_way.$refs.js_shade) {\n  // //     console.log('在侧栏外');\n  // //     js_sort_way.hideSide();\n  // // }\n  // if (event.target == js_sort_way.$refs.js_show_side) {\n  //     console.log(\"单击筛选\");\n  // }\n}\n\nnew vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]({\n  el: '#app',\n  template: '<App/>',\n  components: {\n    App: _app_vue__WEBPACK_IMPORTED_MODULE_1__[\"default\"]\n  }\n});\n\n//# sourceURL=webpack:///./src/images/index.js?");
+
+/***/ }),
+
+/***/ "./src/images/logo.png":
+/*!*****************************!*\
+  !*** ./src/images/logo.png ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("module.exports = __webpack_require__.p + \"images/logo.png\";\n\n//# sourceURL=webpack:///./src/images/logo.png?");
 
 /***/ })
 
