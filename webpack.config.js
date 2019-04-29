@@ -9,13 +9,13 @@ module.exports = {
     output: {
         //node.js中__dirname变量获取当前模块文件所在目录的完整绝对路径 
         path: basePath.join(__dirname, 'dist'), //输出位置
-        filename: 'index.js' //输入文件
+        filename: './images/index.js' //输出文件
     },
     plugins: [
         // 没有这个无法实现热更新
         new HtmlWebpackPlugin({
             template: './static/index.html',
-            filename: 'index.html',
+            filename: './static/index.html',
         }),
         // 热更新模块
         new webpack.HotModuleReplacementPlugin(),
@@ -27,8 +27,22 @@ module.exports = {
         new VueLoaderPlugin()
     ],
     module: {
-        rules: [
-            {
+        rules: [{
+                test: /\.(png|jpg|gif|jpeg|svg)$/,
+                use: [{
+                    loader: "url-loader",
+                    options: {
+                        name: "[name].[ext]",
+                        limit: 1024, // size <= 1kib
+                        outputPath: "images"
+                    }
+                }]
+            }, {
+                test: /\.html$/,
+                use: {
+                    loader: 'html-loader'
+                }
+            }, {
                 test: /\.js$/,
                 use: 'babel-loader'
             },
@@ -49,6 +63,7 @@ module.exports = {
         ignored: /node_modules/
     },
     devServer: {
+        contentBase: basePath.join(__dirname, "dist"), // 设置服务器目录
         port: 8080,
         open: true, // 自动开启浏览器
         inline: true, // inline模式热更新
