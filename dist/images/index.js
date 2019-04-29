@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "eb61a5ca25a01bc24151";
+/******/ 	var hotCurrentHash = "d451722dce0abdb3f129";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -793,6 +793,30 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js?!./src/app.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./src/app.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _components_header_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/header.vue */ \"./src/components/header.vue\");\n//\n//\n//\n//\n//\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  name: \"app\",\n  components: {\n    HeaderComponent: _components_header_vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]\n  }\n});\n\n//# sourceURL=webpack:///./src/app.vue?./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js?!./src/components/header.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./src/components/header.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  name: \"HeaderComponent\",\n  props: {}\n});\n\n//# sourceURL=webpack:///./src/components/header.vue?./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
 /***/ "./node_modules/process/browser.js":
 /*!*****************************************!*\
   !*** ./node_modules/process/browser.js ***!
@@ -826,6 +850,53 @@ eval("/* WEBPACK VAR INJECTION */(function(global) {var scope = typeof global !=
 
 /***/ }),
 
+/***/ "./node_modules/vue-hot-reload-api/dist/index.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/vue-hot-reload-api/dist/index.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("var Vue; // late bind\n\nvar version;\nvar map = Object.create(null);\n\nif (typeof window !== 'undefined') {\n  window.__VUE_HOT_MAP__ = map;\n}\n\nvar installed = false;\nvar isBrowserify = false;\nvar initHookName = 'beforeCreate';\n\nexports.install = function (vue, browserify) {\n  if (installed) {\n    return;\n  }\n\n  installed = true;\n  Vue = vue.__esModule ? vue.default : vue;\n  version = Vue.version.split('.').map(Number);\n  isBrowserify = browserify; // compat with < 2.0.0-alpha.7\n\n  if (Vue.config._lifecycleHooks.indexOf('init') > -1) {\n    initHookName = 'init';\n  }\n\n  exports.compatible = version[0] >= 2;\n\n  if (!exports.compatible) {\n    console.warn('[HMR] You are using a version of vue-hot-reload-api that is ' + 'only compatible with Vue.js core ^2.0.0.');\n    return;\n  }\n};\n/**\n * Create a record for a hot module, which keeps track of its constructor\n * and instances\n *\n * @param {String} id\n * @param {Object} options\n */\n\n\nexports.createRecord = function (id, options) {\n  if (map[id]) {\n    return;\n  }\n\n  var Ctor = null;\n\n  if (typeof options === 'function') {\n    Ctor = options;\n    options = Ctor.options;\n  }\n\n  makeOptionsHot(id, options);\n  map[id] = {\n    Ctor: Ctor,\n    options: options,\n    instances: []\n  };\n};\n/**\n * Check if module is recorded\n *\n * @param {String} id\n */\n\n\nexports.isRecorded = function (id) {\n  return typeof map[id] !== 'undefined';\n};\n/**\n * Make a Component options object hot.\n *\n * @param {String} id\n * @param {Object} options\n */\n\n\nfunction makeOptionsHot(id, options) {\n  if (options.functional) {\n    var render = options.render;\n\n    options.render = function (h, ctx) {\n      var instances = map[id].instances;\n\n      if (ctx && instances.indexOf(ctx.parent) < 0) {\n        instances.push(ctx.parent);\n      }\n\n      return render(h, ctx);\n    };\n  } else {\n    injectHook(options, initHookName, function () {\n      var record = map[id];\n\n      if (!record.Ctor) {\n        record.Ctor = this.constructor;\n      }\n\n      record.instances.push(this);\n    });\n    injectHook(options, 'beforeDestroy', function () {\n      var instances = map[id].instances;\n      instances.splice(instances.indexOf(this), 1);\n    });\n  }\n}\n/**\n * Inject a hook to a hot reloadable component so that\n * we can keep track of it.\n *\n * @param {Object} options\n * @param {String} name\n * @param {Function} hook\n */\n\n\nfunction injectHook(options, name, hook) {\n  var existing = options[name];\n  options[name] = existing ? Array.isArray(existing) ? existing.concat(hook) : [existing, hook] : [hook];\n}\n\nfunction tryWrap(fn) {\n  return function (id, arg) {\n    try {\n      fn(id, arg);\n    } catch (e) {\n      console.error(e);\n      console.warn('Something went wrong during Vue component hot-reload. Full reload required.');\n    }\n  };\n}\n\nfunction updateOptions(oldOptions, newOptions) {\n  for (var key in oldOptions) {\n    if (!(key in newOptions)) {\n      delete oldOptions[key];\n    }\n  }\n\n  for (var key$1 in newOptions) {\n    oldOptions[key$1] = newOptions[key$1];\n  }\n}\n\nexports.rerender = tryWrap(function (id, options) {\n  var record = map[id];\n\n  if (!options) {\n    record.instances.slice().forEach(function (instance) {\n      instance.$forceUpdate();\n    });\n    return;\n  }\n\n  if (typeof options === 'function') {\n    options = options.options;\n  }\n\n  if (record.Ctor) {\n    record.Ctor.options.render = options.render;\n    record.Ctor.options.staticRenderFns = options.staticRenderFns;\n    record.instances.slice().forEach(function (instance) {\n      instance.$options.render = options.render;\n      instance.$options.staticRenderFns = options.staticRenderFns; // reset static trees\n      // pre 2.5, all static trees are cached together on the instance\n\n      if (instance._staticTrees) {\n        instance._staticTrees = [];\n      } // 2.5.0\n\n\n      if (Array.isArray(record.Ctor.options.cached)) {\n        record.Ctor.options.cached = [];\n      } // 2.5.3\n\n\n      if (Array.isArray(instance.$options.cached)) {\n        instance.$options.cached = [];\n      } // post 2.5.4: v-once trees are cached on instance._staticTrees.\n      // Pure static trees are cached on the staticRenderFns array\n      // (both already reset above)\n      // 2.6: temporarily mark rendered scoped slots as unstable so that\n      // child components can be forced to update\n\n\n      var restore = patchScopedSlots(instance);\n      instance.$forceUpdate();\n      instance.$nextTick(restore);\n    });\n  } else {\n    // functional or no instance created yet\n    record.options.render = options.render;\n    record.options.staticRenderFns = options.staticRenderFns; // handle functional component re-render\n\n    if (record.options.functional) {\n      // rerender with full options\n      if (Object.keys(options).length > 2) {\n        updateOptions(record.options, options);\n      } else {\n        // template-only rerender.\n        // need to inject the style injection code for CSS modules\n        // to work properly.\n        var injectStyles = record.options._injectStyles;\n\n        if (injectStyles) {\n          var render = options.render;\n\n          record.options.render = function (h, ctx) {\n            injectStyles.call(ctx);\n            return render(h, ctx);\n          };\n        }\n      }\n\n      record.options._Ctor = null; // 2.5.3\n\n      if (Array.isArray(record.options.cached)) {\n        record.options.cached = [];\n      }\n\n      record.instances.slice().forEach(function (instance) {\n        instance.$forceUpdate();\n      });\n    }\n  }\n});\nexports.reload = tryWrap(function (id, options) {\n  var record = map[id];\n\n  if (options) {\n    if (typeof options === 'function') {\n      options = options.options;\n    }\n\n    makeOptionsHot(id, options);\n\n    if (record.Ctor) {\n      if (version[1] < 2) {\n        // preserve pre 2.2 behavior for global mixin handling\n        record.Ctor.extendOptions = options;\n      }\n\n      var newCtor = record.Ctor.super.extend(options);\n      record.Ctor.options = newCtor.options;\n      record.Ctor.cid = newCtor.cid;\n      record.Ctor.prototype = newCtor.prototype;\n\n      if (newCtor.release) {\n        // temporary global mixin strategy used in < 2.0.0-alpha.6\n        newCtor.release();\n      }\n    } else {\n      updateOptions(record.options, options);\n    }\n  }\n\n  record.instances.slice().forEach(function (instance) {\n    if (instance.$vnode && instance.$vnode.context) {\n      instance.$vnode.context.$forceUpdate();\n    } else {\n      console.warn('Root or manually mounted instance modified. Full reload required.');\n    }\n  });\n}); // 2.6 optimizes template-compiled scoped slots and skips updates if child\n// only uses scoped slots. We need to patch the scoped slots resolving helper\n// to temporarily mark all scoped slots as unstable in order to force child\n// updates.\n\nfunction patchScopedSlots(instance) {\n  if (!instance._u) {\n    return;\n  } // https://github.com/vuejs/vue/blob/dev/src/core/instance/render-helpers/resolve-scoped-slots.js\n\n\n  var original = instance._u;\n\n  instance._u = function (slots) {\n    try {\n      // 2.6.4 ~ 2.6.6\n      return original(slots, true);\n    } catch (e) {\n      // 2.5 / >= 2.6.7\n      return original(slots, null, true);\n    }\n  };\n\n  return function () {\n    instance._u = original;\n  };\n}\n\n//# sourceURL=webpack:///./node_modules/vue-hot-reload-api/dist/index.js?");
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/app.vue?vue&type=template&id=5ef48958&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./src/app.vue?vue&type=template&id=5ef48958& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { attrs: { id: \"app\" } }, [_c(\"HeaderComponent\")], 1)\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/app.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/components/header.vue?vue&type=template&id=29e8c3c6&":
+/*!************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./src/components/header.vue?vue&type=template&id=29e8c3c6& ***!
+  \************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"header\" })\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/components/header.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return normalizeComponent; });\n/* globals __VUE_SSR_CONTEXT__ */\n\n// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).\n// This module is a runtime utility for cleaner component module output and will\n// be included in the final webpack user bundle.\n\nfunction normalizeComponent (\n  scriptExports,\n  render,\n  staticRenderFns,\n  functionalTemplate,\n  injectStyles,\n  scopeId,\n  moduleIdentifier, /* server only */\n  shadowMode /* vue-cli only */\n) {\n  // Vue.extend constructor export interop\n  var options = typeof scriptExports === 'function'\n    ? scriptExports.options\n    : scriptExports\n\n  // render functions\n  if (render) {\n    options.render = render\n    options.staticRenderFns = staticRenderFns\n    options._compiled = true\n  }\n\n  // functional template\n  if (functionalTemplate) {\n    options.functional = true\n  }\n\n  // scopedId\n  if (scopeId) {\n    options._scopeId = 'data-v-' + scopeId\n  }\n\n  var hook\n  if (moduleIdentifier) { // server build\n    hook = function (context) {\n      // 2.3 injection\n      context =\n        context || // cached call\n        (this.$vnode && this.$vnode.ssrContext) || // stateful\n        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional\n      // 2.2 with runInNewContext: true\n      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {\n        context = __VUE_SSR_CONTEXT__\n      }\n      // inject component styles\n      if (injectStyles) {\n        injectStyles.call(this, context)\n      }\n      // register component module identifier for async chunk inferrence\n      if (context && context._registeredComponents) {\n        context._registeredComponents.add(moduleIdentifier)\n      }\n    }\n    // used by ssr in case component is cached and beforeCreate\n    // never gets called\n    options._ssrRegister = hook\n  } else if (injectStyles) {\n    hook = shadowMode\n      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }\n      : injectStyles\n  }\n\n  if (hook) {\n    if (options.functional) {\n      // for template-only hot-reload because in that case the render fn doesn't\n      // go through the normalizer\n      options._injectStyles = hook\n      // register for functioal component in vue file\n      var originalRender = options.render\n      options.render = function renderWithStyleInjection (h, context) {\n        hook.call(context)\n        return originalRender(h, context)\n      }\n    } else {\n      // inject component registration as beforeCreate hook\n      var existing = options.beforeCreate\n      options.beforeCreate = existing\n        ? [].concat(existing, hook)\n        : [hook]\n    }\n  }\n\n  return {\n    exports: scriptExports,\n    options: options\n  }\n}\n\n\n//# sourceURL=webpack:///./node_modules/vue-loader/lib/runtime/componentNormalizer.js?");
+
+/***/ }),
+
 /***/ "./node_modules/vue/dist/vue.esm.js":
 /*!******************************************!*\
   !*** ./node_modules/vue/dist/vue.esm.js ***!
@@ -849,6 +920,78 @@ eval("var g; // This works in non-strict mode\n\ng = function () {\n  return thi
 
 /***/ }),
 
+/***/ "./src/app.vue":
+/*!*********************!*\
+  !*** ./src/app.vue ***!
+  \*********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _app_vue_vue_type_template_id_5ef48958___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app.vue?vue&type=template&id=5ef48958& */ \"./src/app.vue?vue&type=template&id=5ef48958&\");\n/* harmony import */ var _app_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app.vue?vue&type=script&lang=js& */ \"./src/app.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n/* normalize component */\n\nvar component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(\n  _app_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _app_vue_vue_type_template_id_5ef48958___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n  _app_vue_vue_type_template_id_5ef48958___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"],\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (true) {\n  var api = __webpack_require__(/*! ./node_modules/vue-hot-reload-api/dist/index.js */ \"./node_modules/vue-hot-reload-api/dist/index.js\")\n  api.install(__webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.esm.js\"))\n  if (api.compatible) {\n    module.hot.accept()\n    if (!module.hot.data) {\n      api.createRecord('5ef48958', component.options)\n    } else {\n      api.reload('5ef48958', component.options)\n    }\n    module.hot.accept(/*! ./app.vue?vue&type=template&id=5ef48958& */ \"./src/app.vue?vue&type=template&id=5ef48958&\", function(__WEBPACK_OUTDATED_DEPENDENCIES__) { /* harmony import */ _app_vue_vue_type_template_id_5ef48958___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app.vue?vue&type=template&id=5ef48958& */ \"./src/app.vue?vue&type=template&id=5ef48958&\");\n(function () {\n      api.rerender('5ef48958', {\n        render: _app_vue_vue_type_template_id_5ef48958___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n        staticRenderFns: _app_vue_vue_type_template_id_5ef48958___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]\n      })\n    })(__WEBPACK_OUTDATED_DEPENDENCIES__); }.bind(this))\n  }\n}\ncomponent.options.__file = \"src/app.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack:///./src/app.vue?");
+
+/***/ }),
+
+/***/ "./src/app.vue?vue&type=script&lang=js&":
+/*!**********************************************!*\
+  !*** ./src/app.vue?vue&type=script&lang=js& ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_app_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/babel-loader/lib!../node_modules/vue-loader/lib??vue-loader-options!./app.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js?!./src/app.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_app_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); \n\n//# sourceURL=webpack:///./src/app.vue?");
+
+/***/ }),
+
+/***/ "./src/app.vue?vue&type=template&id=5ef48958&":
+/*!****************************************************!*\
+  !*** ./src/app.vue?vue&type=template&id=5ef48958& ***!
+  \****************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_app_vue_vue_type_template_id_5ef48958___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../node_modules/vue-loader/lib??vue-loader-options!./app.vue?vue&type=template&id=5ef48958& */ \"./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/app.vue?vue&type=template&id=5ef48958&\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_app_vue_vue_type_template_id_5ef48958___WEBPACK_IMPORTED_MODULE_0__[\"render\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_app_vue_vue_type_template_id_5ef48958___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]; });\n\n\n\n//# sourceURL=webpack:///./src/app.vue?");
+
+/***/ }),
+
+/***/ "./src/components/header.vue":
+/*!***********************************!*\
+  !*** ./src/components/header.vue ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _header_vue_vue_type_template_id_29e8c3c6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./header.vue?vue&type=template&id=29e8c3c6& */ \"./src/components/header.vue?vue&type=template&id=29e8c3c6&\");\n/* harmony import */ var _header_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./header.vue?vue&type=script&lang=js& */ \"./src/components/header.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n/* normalize component */\n\nvar component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(\n  _header_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _header_vue_vue_type_template_id_29e8c3c6___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n  _header_vue_vue_type_template_id_29e8c3c6___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"],\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (true) {\n  var api = __webpack_require__(/*! ./node_modules/vue-hot-reload-api/dist/index.js */ \"./node_modules/vue-hot-reload-api/dist/index.js\")\n  api.install(__webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.esm.js\"))\n  if (api.compatible) {\n    module.hot.accept()\n    if (!module.hot.data) {\n      api.createRecord('29e8c3c6', component.options)\n    } else {\n      api.reload('29e8c3c6', component.options)\n    }\n    module.hot.accept(/*! ./header.vue?vue&type=template&id=29e8c3c6& */ \"./src/components/header.vue?vue&type=template&id=29e8c3c6&\", function(__WEBPACK_OUTDATED_DEPENDENCIES__) { /* harmony import */ _header_vue_vue_type_template_id_29e8c3c6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./header.vue?vue&type=template&id=29e8c3c6& */ \"./src/components/header.vue?vue&type=template&id=29e8c3c6&\");\n(function () {\n      api.rerender('29e8c3c6', {\n        render: _header_vue_vue_type_template_id_29e8c3c6___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n        staticRenderFns: _header_vue_vue_type_template_id_29e8c3c6___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]\n      })\n    })(__WEBPACK_OUTDATED_DEPENDENCIES__); }.bind(this))\n  }\n}\ncomponent.options.__file = \"src/components/header.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack:///./src/components/header.vue?");
+
+/***/ }),
+
+/***/ "./src/components/header.vue?vue&type=script&lang=js&":
+/*!************************************************************!*\
+  !*** ./src/components/header.vue?vue&type=script&lang=js& ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_header_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/babel-loader/lib!../../node_modules/vue-loader/lib??vue-loader-options!./header.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js?!./src/components/header.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_header_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); \n\n//# sourceURL=webpack:///./src/components/header.vue?");
+
+/***/ }),
+
+/***/ "./src/components/header.vue?vue&type=template&id=29e8c3c6&":
+/*!******************************************************************!*\
+  !*** ./src/components/header.vue?vue&type=template&id=29e8c3c6& ***!
+  \******************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_header_vue_vue_type_template_id_29e8c3c6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../node_modules/vue-loader/lib??vue-loader-options!./header.vue?vue&type=template&id=29e8c3c6& */ \"./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/components/header.vue?vue&type=template&id=29e8c3c6&\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_header_vue_vue_type_template_id_29e8c3c6___WEBPACK_IMPORTED_MODULE_0__[\"render\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_header_vue_vue_type_template_id_29e8c3c6___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]; });\n\n\n\n//# sourceURL=webpack:///./src/components/header.vue?");
+
+/***/ }),
+
 /***/ "./src/images/index.js":
 /*!*****************************!*\
   !*** ./src/images/index.js ***!
@@ -857,7 +1000,7 @@ eval("var g; // This works in non-strict mode\n\ng = function () {\n  return thi
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.esm.js\");\n!(function webpackMissingModule() { var e = new Error(\"Cannot find module '../components/app.vue'\"); e.code = 'MODULE_NOT_FOUND'; throw e; }());\n\n // 鼠标按下事件（显示或隐藏侧边栏）   开始\n\nfunction mouseDown(event) {// var point = event || window.event;\n  // var screen_width = document.body.clientWidth;\n  // if (screen_width < 992 && screen_width - point.clientX > 300 && event.target != js_sort_way.$refs.js_show_side) {\n  //     console.log('在侧栏外');\n  //     js_sort_way.hideSide();\n  // }\n  // // if (event.target == js_sort_way.$refs.js_shade) {\n  // //     console.log('在侧栏外');\n  // //     js_sort_way.hideSide();\n  // // }\n  // if (event.target == js_sort_way.$refs.js_show_side) {\n  //     console.log(\"单击筛选\");\n  // }\n}\n\nnew vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]({\n  el: '#app',\n  template: '<App/>',\n  components: {\n    App: !(function webpackMissingModule() { var e = new Error(\"Cannot find module '../components/app.vue'\"); e.code = 'MODULE_NOT_FOUND'; throw e; }())\n  }\n});\n\n//# sourceURL=webpack:///./src/images/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.esm.js\");\n/* harmony import */ var _app_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../app.vue */ \"./src/app.vue\");\n\n // import App from '../../app.vue'\n// 鼠标按下事件（显示或隐藏侧边栏）   开始\n\nfunction mouseDown(event) {// var point = event || window.event;\n  // var screen_width = document.body.clientWidth;\n  // if (screen_width < 992 && screen_width - point.clientX > 300 && event.target != js_sort_way.$refs.js_show_side) {\n  //     console.log('在侧栏外');\n  //     js_sort_way.hideSide();\n  // }\n  // // if (event.target == js_sort_way.$refs.js_shade) {\n  // //     console.log('在侧栏外');\n  // //     js_sort_way.hideSide();\n  // // }\n  // if (event.target == js_sort_way.$refs.js_show_side) {\n  //     console.log(\"单击筛选\");\n  // }\n}\n\nnew vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]({\n  el: '#app',\n  template: '<App/>',\n  components: {\n    App: _app_vue__WEBPACK_IMPORTED_MODULE_1__[\"default\"]\n  }\n});\n\n//# sourceURL=webpack:///./src/images/index.js?");
 
 /***/ })
 
