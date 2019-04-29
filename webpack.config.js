@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 module.exports = {
-    entry: './images/index.js', //入口文件
+    entry: './src/images/index.js', //入口文件
     mode: 'development',
     output: {
         //node.js中__dirname变量获取当前模块文件所在目录的完整绝对路径 
@@ -14,7 +14,7 @@ module.exports = {
     plugins: [
         // 没有这个无法实现热更新
         new HtmlWebpackPlugin({
-            template: './static/index.html',
+            template: './src/static/index.html',
             filename: './static/index.html',
         }),
         // 热更新模块

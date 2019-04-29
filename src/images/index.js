@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import HeaderComponent from '../components/header.vue'
+import App from '../app.vue'
+// import App from '../../app.vue'
 // 鼠标按下事件（显示或隐藏侧边栏）   开始
 function mouseDown(event) {
     // var point = event || window.event;
@@ -19,4 +20,8 @@ function mouseDown(event) {
 
 new Vue({
     el: '#app',
+    template: '<App/>',
+    components:{
+        App
+    }
 })
