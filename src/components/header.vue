@@ -4,7 +4,7 @@
     <!-- logo和搜索框   START -->
     <div v-bind:class="{ceil_fixed : is_fixed_ceil}" class="ceil_box js_ceil_box">
       <div class="header_logo">
-        <a v-show="is_show_logo" class="logo_box" href="main.html">
+        <a v-show="is_show_logo" class="logo_box" href="index.html">
           <img src="../images/logo.png">
         </a>
         <form
@@ -18,7 +18,7 @@
       </div>
     </div>
     <!-- 当搜索框吸顶时，顶替搜索框，防止页面元素上移 -->
-    <p v-show="is_replace" class="ceil_filler js_ceil_filler"></p>
+    <p v-show="is_fixed_ceil" class="ceil_filler js_ceil_filler"></p>
     <!-- logo和搜索框   END -->
 
     <!-- 按钮   START -->
@@ -47,14 +47,13 @@ export default {
     is_fixed_ceil: {
       default: false
     },
-    // 是否替换搜索框
-    is_replace: {
-      default: false
-    },
     // 搜索词
     search_word: {
       default: ""
     }
+  },
+  created: function() {
+   
   },
   methods: {
     search: function() {
@@ -77,6 +76,11 @@ export default {
         // 支持后退
         // window.location.href = "search.html?search=all";
       }
+      return false;
+    },
+    // 向ajax_pars中添加参数
+    addProperty:function(){
+
     }
   }
 };
@@ -87,7 +91,6 @@ export default {
 .header {
   position: relative;
   margin: 40px auto 0 auto;
-  /* max-width: 1920px; */
 }
 
 .header .ceil_box {
