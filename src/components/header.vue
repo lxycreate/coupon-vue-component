@@ -70,7 +70,6 @@ export default {
     },
     // 吸顶搜索框
     fixedSearchInput: function() {
-      console.log('aaa');
       this.is_fixed_ceil = true;
     },
     // 解除搜索框吸顶
