@@ -77,10 +77,6 @@ export default {
         // window.location.href = "search.html?search=all";
       }
       return false;
-    },
-    // 向ajax_pars中添加参数
-    addProperty:function(){
-
     }
   }
 };
