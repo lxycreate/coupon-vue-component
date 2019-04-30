@@ -36,47 +36,63 @@
 </template>
 
 <script>
+import '../images/iconfont.css';
+
 export default {
   name: "HeaderComponent",
-  props: {
-    // 是否显示logo
-    is_show_logo: {
-      default: true
-    },
-    // 搜索框是否吸顶
-    is_fixed_ceil: {
-      default: false
-    },
-    // 搜索词
-    search_word: {
-      default: ""
-    }
+  props: {},
+  data: function() {
+    return {
+      // 是否显示logo
+      is_show_logo: true,
+      // 搜索框是否吸顶
+      is_fixed_ceil: false,
+      // 搜索词
+      search_word: ""
+    };
   },
-  created: function() {
-    // this.$parent.test();
-  },
+  created: function() {},
   methods: {
+    // 搜索
     search: function() {
       if (now_page_name != "search" && this.search_word != "") {
         window.location.href =
           "search.html?search=" + encodeURI(this.search_word);
       }
-
       if (now_page_name == "search" && this.search_word != "") {
         scrollToTopDirect();
         this.$parent.addProperty("word", this.search_word);
       }
       if (now_page_name == "search" && this.search_word == "") {
         search_data["word"] = "";
-        deleteProperty("word");
+        this.$parent.deleteProperty("word");
       }
+    },
+    // 吸顶搜索框
+    fixedSearchInput: function() {
+      console.log('aaa');
+      this.is_fixed_ceil = true;
+    },
+    // 解除搜索框吸顶
+    unfixedSearchInput: function() {
+      this.is_fixed_ceil = false;
+    },
+    // 显示logo
+    showLogo: function() {
+      this.is_show_logo = true;
+    },
+    // 隐藏logo
+    hideLogo: function() {
+      this.is_show_logo = false;
     }
   }
 };
-
 </script>
 
 <style>
+#app {
+  height: 1920px;
+}
 /* -----------------------------------------------导航   开始----------------------------------- */
 .header {
   position: relative;
