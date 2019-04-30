@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import '../images/iconfont.css';
+import "../images/iconfont.css";
 
 export default {
   name: "HeaderComponent",
@@ -68,22 +68,22 @@ export default {
         this.$parent.deleteProperty("word");
       }
     },
-    // 吸顶搜索框
-    fixedSearchInput: function() {
+    // 大屏幕吸顶搜索框
+    fixedSearchInputLarge: function() {
       this.is_fixed_ceil = true;
+      this.is_show_logo = true;
+    },
+    // 小屏幕吸顶搜索框
+    fixedSearchInputSmall: function() {
+      this.is_fixed_ceil = true;
+      this.is_show_logo = false;
     },
     // 解除搜索框吸顶
     unfixedSearchInput: function() {
       this.is_fixed_ceil = false;
-    },
-    // 显示logo
-    showLogo: function() {
       this.is_show_logo = true;
-    },
-    // 隐藏logo
-    hideLogo: function() {
-      this.is_show_logo = false;
     }
+    // 
   }
 };
 </script>

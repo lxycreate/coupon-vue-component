@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import FilterComponent from "./filter.vue";
 export default {
   name: "Middle",
   props: {},
