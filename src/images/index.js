@@ -18,10 +18,10 @@ function mouseDown(event) {
     // }
 }
 
-new Vue({
+var vueApp = new Vue({
     el: '#app',
     template: '<App/>',
-    components:{
+    components: {
         App
     }
 })

@@ -10,10 +10,10 @@
         <form
           v-bind:class="{no_margin : !is_show_logo}"
           class="search_input js_search_input"
-          onsubmit="return search()"
+          onsubmit="return false"
         >
-          <input v-model="search_word" placeholder="商品标题、关键字">
-          <i class="icon-font i-search-pc" @click="search"></i>
+          <input v-on:keyup.enter="search" v-model="search_word" placeholder="商品标题、关键字">
+          <i class="icon-font i-search-pc" v-on:click="search"></i>
         </form>
       </div>
     </div>
@@ -53,7 +53,7 @@ export default {
     }
   },
   created: function() {
-   
+    // this.$parent.test();
   },
   methods: {
     search: function() {
@@ -63,23 +63,17 @@ export default {
       }
 
       if (now_page_name == "search" && this.search_word != "") {
-        // 不支持后退
         scrollToTopDirect();
-        addProperty("word", this.search_word);
-        // 支持后退
-        // window.location.href = "search.html?search=" + encodeURI(this.search_word);
+        this.$parent.addProperty("word", this.search_word);
       }
       if (now_page_name == "search" && this.search_word == "") {
-        // 不支持后退
         search_data["word"] = "";
         deleteProperty("word");
-        // 支持后退
-        // window.location.href = "search.html?search=all";
       }
-      return false;
     }
   }
 };
+
 </script>
 
 <style>
