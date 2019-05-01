@@ -121,6 +121,15 @@ export default {
         return false;
       }
       return true;
+    },
+    // 判断是否是数字
+    isNumber: function(val) {
+      var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+      if (regPos.test(val)) {
+        return true;
+      } else {
+        return false;
+      }
     }
     //
   }

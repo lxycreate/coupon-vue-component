@@ -52,7 +52,6 @@
               <input
                 maxlength="8"
                 v-model="sale_item.value"
-                v-bind:class="{input_error:sale_item.is_error}"
                 onkeyup="onlyPositiveInt(this)"
               >
             </li>
@@ -61,7 +60,6 @@
               <input
                 maxlength="3"
                 v-model="score_item.value"
-                v-bind:class="{input_error:score_item.is_error}"
                 onkeyup="zeroToFive(this)"
               >
               <span class="tip">{{score_item.tip}}</span>
@@ -72,7 +70,6 @@
                 maxlength="8"
                 class="one"
                 v-model="quan_item.start_price"
-                v-bind:class="{input_error:quan_item.is_start_error}"
                 placeholder="最低价"
                 onkeyup="onlyPositiveInt(this)"
               >
@@ -81,7 +78,6 @@
                 maxlength="8"
                 class="two"
                 v-model="quan_item.end_price"
-                v-bind:class="{input_error:quan_item.is_end_error}"
                 placeholder="最高价"
                 onkeyup="onlyPositiveInt(this)"
               >
@@ -277,21 +273,17 @@ export default {
         name: "券后价格区间",
         start_price: "", //最低价
         end_price: "", //最高价
-        is_start_error: false, //输入是否合法
-        is_end_error: false
       },
       //评分筛选
       score_item: {
         name: "动态评分≥",
         value: "",
         tip: " (0分-5分)",
-        is_error: false //输入是否合法
       },
       //销量筛选
       sale_item: {
         name: "总销量≥",
         value: "",
-        is_error: false //输入是否合法
       },
       // 是否显示loading动画
       is_loading: false,
@@ -440,11 +432,11 @@ export default {
       }
       return false;
     },
-    //检查券后价
+    //检查券后价是否是输入的最低价大于最高价
     checkAfterCoupon: function() {
       if (
-        isNumber(this.quan_item.start_price) &&
-        isNumber(this.quan_item.end_price)
+        app.isNumber(this.quan_item.start_price) &&
+        app.isNumber(this.quan_item.end_price)
       ) {
         var start = parseInt(this.quan_item.start_price);
         var end = parseInt(this.quan_item.end_price);
