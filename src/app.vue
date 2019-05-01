@@ -15,8 +15,7 @@ export default {
     HeaderComponent,
     MiddleComponent
   },
-  props: {
-  },
+  props: {},
   data: function() {
     return {
       // 存储ajax参数的对象
@@ -52,7 +51,7 @@ export default {
           _self.$refs.HeaderComponent.fixedSearchInputSmall();
         }
         // 搜索框吸顶   end
-      }
+      };
     },
     // 向ajax_pars中添加参数
     addProperty: function(pro_name, pro_value) {
@@ -65,6 +64,16 @@ export default {
       if (this.ajax_pars.hasOwnProperty(pro_name) && this.can_ajax) {
         delete this.ajax_pars[pro_name];
         // loadGoods(pro_name);
+      }
+    },
+    // 向ajax_pars中添加参数但是不进行ajax请求
+    addPropertyNoAjax: function(pro_name, pro_value) {
+      if (pro_name != undefined && pro_value != undefined) {
+      }
+    },
+    // 从ajax_pars中删除属性但是不进行ajax请求
+    deletePropertyNoAjax: function(pro_name) {
+      if (this.ajax_pars.hasOwnProperty(pro_name)) {
       }
     }
   }

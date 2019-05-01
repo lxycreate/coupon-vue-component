@@ -328,7 +328,9 @@ export default {
       }
     };
   },
-  created: function() {},
+  created: function() {
+    app = this.$root.$children[0];
+  },
   methods: {
     // 单选目录事件
     selectCatalogItem: function(value) {
@@ -340,9 +342,9 @@ export default {
 
       // 参数中添加目录信息
       if (this.catalog_value != 0) {
-        addProperty("goods_cid", this.catalog_value);
+        app.addProperty("goods_cid", this.catalog_value);
       } else {
-        deleteProperty("goods_cid");
+        app.deleteProperty("goods_cid");
       }
     },
     // 多选筛选条件事件
