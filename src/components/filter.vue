@@ -112,22 +112,20 @@
       <!--  -->
       <ul class="btn_box">
         <!-- "综合" -->
-        <li class="btn" v-bind:class="{is_sort_selected:sort_item[0].is_select}">
-          <a @click="changeSortWay(0,'all')">综合</a>
-        </li>
-        <!-- "销量" -->
-        <li class="btn" v-bind:class="{is_sort_selected:sort_item[1].is_select}">
-          <a @click="changeSortWay(1,'goods_sale desc')">销量</a>
-        </li>
-        <!-- "价格" -->
-        <li class="btn price" v-bind:class="{is_sort_selected:sort_item[2].is_select}">
-          <a @click="sortByPrice">
-            价格
-            <span v-show="sort_item[2].is_select">
+        <li
+          class="btn"
+          v-for="(item,index) in sort_item"
+          v-bind:class="{price:index==2,is_sort_selected:item.is_select}"
+          v-bind:key="index"
+        >
+          <a v-if="index!=2" @click="changeSortWay(index,item.type)">{{item.name}}</a>
+          <a v-else @click="sortByPrice">
+            {{item.name}}
+            <span v-show="item.is_select">
               <i
                 ref="js_transform"
                 class="icon-font i-dropdown"
-                v-bind:class="{is_sort_selected:sort_item[2].is_select}"
+                v-bind:class="{is_sort_selected:item.is_select}"
               ></i>
             </span>
           </a>
@@ -146,7 +144,7 @@
       </ul>
       <!--  -->
       <!-- 遮罩,弹出擦边栏时防止误触 -->
-      <div v-show="is_show_shade" ref="js_shade" class="shade"></div>
+      <div v-show="is_show_side" ref="js_shade" class="shade"></div>
     </div>
     <!-- 排序方式   end -->
   </div>
@@ -160,7 +158,7 @@ export default {
   data: function() {
     return {
       // 当前页面的app组件实例
-      app:{},
+      app: {},
       // 目录选择
       catalog_name: "分类:",
       catalog_value: "0",
@@ -302,18 +300,18 @@ export default {
         value: "",
         is_error: false //输入是否合法
       },
+      // 是否显示loading动画
       is_loading: false,
       is_show_side: false, //侧边栏当前是否显示
-      is_show_shade: false, //遮罩
       sort_item: [
         {
           name: "综合", //名称
-          type: "", //类型
+          type: "all", //排序类型
           is_select: true //是否选中
         },
         {
           name: "销量",
-          type: "goods_sale",
+          type: "goods_sale desc",
           is_select: false
           // 销量只有降序排序
         },
@@ -532,7 +530,6 @@ export default {
     showSide: function() {
       if (isMidSmallScreen() && !this.is_show_side) {
         this.stopSideAnimate();
-        this.is_show_shade = true;
         this.is_show_side = true;
         Velocity(js_filter_container.$refs.js_filter_container, {
           "margin-left": "-300px"
@@ -545,7 +542,6 @@ export default {
       if (isMidSmallScreen() && this.is_show_side) {
         this.stopSideAnimate();
         this.is_show_side = false;
-        this.is_show_shade = false;
         Velocity(js_filter_container.$refs.js_filter_container, {
           "margin-left": "0px"
           // 同上

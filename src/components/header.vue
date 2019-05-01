@@ -84,6 +84,9 @@ export default {
     unfixedSearchInput: function() {
       this.is_fixed_ceil = false;
       this.is_show_logo = true;
+    },
+    test: function() {
+      console.log('test header');
     }
     //
   }
