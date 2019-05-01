@@ -6,7 +6,7 @@
       <div class="btn_top_container">
         <!-- 分类选择  START -->
         <div class="select_box js_catalog_box">
-          <span class="name">{{catalog_name}}</span>
+          <span class="name">分类</span>
           <ul>
             <!--  -->
             <li
@@ -23,7 +23,7 @@
         <!-- 分类选择  END -->
         <!-- 多条件筛选   START -->
         <div class="multi_select_box">
-          <span class="name">{{filter_name}}</span>
+          <span class="name">筛选</span>
           <ul>
             <!-- 分割线 -->
             <li
@@ -45,23 +45,15 @@
         <!-- 多条件筛选   END -->
         <!-- 更多筛选条件   START -->
         <div class="more_filter">
-          <span class="name">{{more_filter_name}}</span>
+          <span class="name">更多</span>
           <ul>
             <li class="sale">
               <span>{{sale_item.name}}</span>
-              <input
-                maxlength="8"
-                v-model="sale_item.value"
-                onkeyup="onlyPositiveInt(this)"
-              >
+              <input maxlength="8" v-model="sale_item.value" onkeyup="onlyPositiveInt(this)">
             </li>
             <li class="score">
               <span>{{score_item.name}}</span>
-              <input
-                maxlength="3"
-                v-model="score_item.value"
-                onkeyup="zeroToFive(this)"
-              >
+              <input maxlength="3" v-model="score_item.value" onkeyup="zeroToFive(this)">
               <span class="tip">{{score_item.tip}}</span>
             </li>
             <li class="quan">
@@ -156,7 +148,6 @@ export default {
       // 当前页面的app组件实例
       app: {},
       // 目录选择
-      catalog_name: "分类:",
       catalog_value: "0",
       catalog_items: [
         {
@@ -221,7 +212,6 @@ export default {
         }
       ],
       // 多选筛选条件
-      filter_name: "筛选:",
       filter_value: "", //当前(选中/取消)的是哪个,相应的从参数添加/删除
       filter_items: [
         {
@@ -266,24 +256,23 @@ export default {
           an_name: "is_yun",
           is_select: false
         }
-      ], //更多 筛选条件
-      more_filter_name: "更多:",
+      ], 
       //券后价格区间筛选
       quan_item: {
         name: "券后价格区间",
         start_price: "", //最低价
-        end_price: "", //最高价
+        end_price: "" //最高价
       },
       //评分筛选
       score_item: {
         name: "动态评分≥",
         value: "",
-        tip: " (0分-5分)",
+        tip: " (0分-5分)"
       },
       //销量筛选
       sale_item: {
         name: "总销量≥",
-        value: "",
+        value: ""
       },
       // 是否显示loading动画
       is_loading: false,
@@ -510,12 +499,16 @@ export default {
       document.body.addEventListener("click", function(event) {
         var point = event || window.event;
         var screen_width = document.body.clientWidth;
-        if (screen_width < 992 && screen_width - point.clientX > 300 && event.target != _self.$refs.js_show_side) {
-            console.log('在侧栏外');
-            _self.hideSide();
+        if (
+          screen_width < 992 &&
+          screen_width - point.clientX > 300 &&
+          event.target != _self.$refs.js_show_side
+        ) {
+          console.log("在侧栏外");
+          _self.hideSide();
         }
         if (event.target == _self.$refs.js_show_side) {
-            console.log("单击筛选");
+          console.log("单击筛选");
         }
       });
     },
@@ -574,6 +567,9 @@ export default {
         this.sort_item[i].is_select = false;
       }
       this.sort_item[index].is_select = true;
+    },
+    test: function() {
+      console.log("111");
     }
     // 事件 end
   }
@@ -675,6 +671,10 @@ export default {
   font-size: 15px;
   vertical-align: top;
   color: #666666;
+}
+
+.filter_box > div .name:after {
+  content: ":";
 }
 
 .filter_box > div .name:hover {
@@ -904,7 +904,9 @@ export default {
     text-indent: 1em;
     font-weight: bold;
   }
-
+  .filter_box > div .name::after {
+    display: none;
+  }
   .filter_box .select_box > ul {
     padding: 0 0 0 15px;
     text-align: left;
