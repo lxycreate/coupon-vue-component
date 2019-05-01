@@ -407,12 +407,7 @@ export default {
       // 不明白为什么有这句
       // this.deleteInputValue();
       this.addInputValue();
-      if (
-        (js_goods_area.can_ajax && this.sale_item.value != "") ||
-        this.score_item.value != "" ||
-        this.quan_item.start_price != "" ||
-        this.quan_item.end_price != ""
-      ) {
+      if (js_goods_area.can_ajax && this.checkInputIsNotEmpty()) {
         //确认 加载
         loadGoods("input");
       }
@@ -625,11 +620,6 @@ export default {
   }
   //
 };
-//只输入正整数
-function onlyPositiveInt(event) {
-  console.log(event);
-  event.value = event.value.replace(/\D/g, "");
-}
 </script>
 
 <style>
