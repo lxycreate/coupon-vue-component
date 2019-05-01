@@ -7,7 +7,7 @@
 <script>
 import FilterComponent from "./filter.vue";
 export default {
-  name: "Middle",
+  name: "MiddleComponent",
   components: {
     FilterComponent
   },

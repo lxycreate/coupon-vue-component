@@ -2,7 +2,7 @@
 <template>
   <!-- 筛选 START-->
   <div class="filter_box">
-    <div class="filter_container js_filter_container" ref="js_filter_container">
+    <div class="filter_container" ref="js_filter_container">
       <div class="btn_top_container">
         <!-- 分类选择  START -->
         <div class="select_box js_catalog_box">
@@ -108,7 +108,7 @@
     </div>
 
     <!-- 排序方式   START -->
-    <div class="sort_way js_sort_way" v-cloak>
+    <div class="sort_way">
       <!--  -->
       <ul class="btn_box">
         <!-- "综合" -->
@@ -356,12 +356,12 @@ export default {
         if (index == 1 && this.filter_items[1].is_select) {
           //取消选中"聚划算"
           this.filter_items[1].is_select = false;
-          app.deletePropertyNoAjax(['is_ju']);
+          app.deletePropertyNoAjax(["is_ju"]);
         }
         if (index == 2 && this.filter_items[0].is_select) {
           //取消选中"淘抢购"
           this.filter_items[0].is_select = false;
-          app.deletePropertyNoAjax(['is_qiang']);
+          app.deletePropertyNoAjax(["is_qiang"]);
         }
       }
       //向search_data中删除或添加参数
@@ -373,6 +373,7 @@ export default {
         app.addProperty(this.filter_items[index_temp - 1].an_name, "1");
       }
     },
+    // 重置
     clear: function() {
       this.resetCatalogItem();
       this.resetMultiSelect();
@@ -385,7 +386,7 @@ export default {
         loadGoods("");
       }
       console.log("Clear");
-       // 未完成  end
+      // 未完成  end
     },
     //重置目录
     resetCatalogItem: function() {
@@ -409,9 +410,11 @@ export default {
       this.quan_item.start_price = "";
       this.quan_item.end_price = "";
     },
+    // 确认
     confirm: function() {
       this.checkAfterCoupon();
-      this.deleteInputValue();
+      // 不明白为什么有这句
+      // this.deleteInputValue();
       this.addInputValue();
       if (
         (js_goods_area.can_ajax && this.sale_item.value != "") ||
@@ -423,6 +426,18 @@ export default {
         loadGoods("input");
       }
       console.log("Confirm");
+    },
+    // 检查输入框是否不为空
+    checkInputIsNotEmpty: function() {
+      if (
+        this.sale_item.value != "" ||
+        this.score_item.value != "" ||
+        this.quan_item.start_price != "" ||
+        this.quan_item.end_price != ""
+      ) {
+        return true;
+      }
+      return false;
     },
     //检查券后价
     checkAfterCoupon: function() {
@@ -441,32 +456,25 @@ export default {
     },
     //从search_data中删除input
     deleteInputValue: function() {
-      if (search_data.hasOwnProperty("sale_num")) {
-        delete search_data["sale_num"];
-      }
-      if (search_data.hasOwnProperty("dsr")) {
-        delete search_data["dsr"];
-      }
-      if (search_data.hasOwnProperty("start_price")) {
-        delete search_data["start_price"];
-      }
-      if (search_data.hasOwnProperty("end_price")) {
-        delete search_data["end_price"];
-      }
+      app.deletePropertyNoAjax(["sale_num", "dsr", "start_price", "end_price"]);
     },
     //向search_data中添加input值
     addInputValue: function() {
+      var obj = {};
       if (this.sale_item.value != "") {
-        search_data["sale_num"] = this.sale_item.value;
+        obj.sale_num = this.sale_item.value;
       }
       if (this.score_item.value != "") {
-        search_data["dsr"] = this.score_item.value;
+        obj.dsr = this.score_item.value;
       }
       if (this.quan_item.start_price != "") {
-        search_data["start_price"] = this.quan_item.start_price;
+        obj.start_price = this.quan_item.start_price;
       }
       if (this.quan_item.end_price != "") {
-        search_data["end_price"] = this.quan_item.end_price;
+        obj.end_price = this.quan_item.end_price;
+      }
+      if (this.checkInputIsNotEmpty()) {
+        app.addPropertyNoAjax(obj);
       }
     },
     // 价格排序
@@ -484,14 +492,14 @@ export default {
           rotateZ: "-180deg"
         });
         // 价格升序排序
-        addProperty("sort", "goods_price asc");
+        app.addProperty("sort", "goods_price asc");
       } else {
         Velocity(this.$refs.js_transform, {
           "margin-top": "13px",
           rotateZ: "0deg"
         });
         // 价格降序排序
-        addProperty("sort", "goods_price desc");
+        app.addProperty("sort", "goods_price desc");
       }
     },
     // 重置价格排序的icon
