@@ -15,7 +15,8 @@ export default {
     HeaderComponent,
     MiddleComponent
   },
-  props: {},
+  props: {
+  },
   data: function() {
     return {
       // 存储ajax参数的对象
@@ -48,7 +49,7 @@ export default {
         }
         // 小屏幕搜索框吸顶
         if (client_width < 992 && scroll_top > 120) {
-          _self.$refs.HeaderComponent.fixedSearchInputLarge();
+          _self.$refs.HeaderComponent.fixedSearchInputSmall();
         }
         // 搜索框吸顶   end
       }

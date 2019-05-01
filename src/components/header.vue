@@ -36,13 +36,13 @@
 </template>
 
 <script>
-import "../images/iconfont.css";
-
 export default {
   name: "HeaderComponent",
   props: {},
   data: function() {
     return {
+      // 当前页面app组件实例
+      app: {},
       // 是否显示logo
       is_show_logo: true,
       // 搜索框是否吸顶
@@ -51,7 +51,9 @@ export default {
       search_word: ""
     };
   },
-  created: function() {},
+  created: function() {
+    app = this.$root.$children[0];
+  },
   methods: {
     // 搜索
     search: function() {
@@ -61,11 +63,11 @@ export default {
       }
       if (now_page_name == "search" && this.search_word != "") {
         scrollToTopDirect();
-        this.$parent.addProperty("word", this.search_word);
+        app.addProperty("word", this.search_word);
       }
       if (now_page_name == "search" && this.search_word == "") {
         search_data["word"] = "";
-        this.$parent.deleteProperty("word");
+        app.deleteProperty("word");
       }
     },
     // 大屏幕吸顶搜索框
@@ -83,7 +85,7 @@ export default {
       this.is_fixed_ceil = false;
       this.is_show_logo = true;
     }
-    // 
+    //
   }
 };
 </script>

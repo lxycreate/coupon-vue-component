@@ -1,11 +1,16 @@
 <template>
-  <div class="middle"></div>
+  <div class="middle">
+    <FilterComponent/>
+  </div>
 </template>
 
 <script>
 import FilterComponent from "./filter.vue";
 export default {
   name: "Middle",
+  components: {
+    FilterComponent
+  },
   props: {},
   data: function() {
     return {};

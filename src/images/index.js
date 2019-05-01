@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import "../images/iconfont.css"
 import App from '../app.vue'
 // import App from '../../app.vue'
 // 鼠标按下事件（显示或隐藏侧边栏）   开始

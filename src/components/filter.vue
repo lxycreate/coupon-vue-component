@@ -1,26 +1,1098 @@
 
 <template>
-  
+  <!-- 筛选 START-->
+  <div class="filter_box">
+    <div class="filter_container js_filter_container" ref="js_filter_container">
+      <div class="btn_top_container">
+        <!-- 分类选择  START -->
+        <div class="select_box js_catalog_box">
+          <span class="name">{{catalog_name}}</span>
+          <ul>
+            <!--  -->
+            <li
+              v-for="item in catalog_items"
+              v-bind:class="{catalog_btn_bg: item.is_select}"
+              v-on:click="selectCatalogItem(item.value)"
+              v-bind:key="item.value"
+            >
+              <a>{{item.name}}</a>
+            </li>
+            <!--  -->
+          </ul>
+        </div>
+        <!-- 分类选择  END -->
+        <!-- 多条件筛选   START -->
+        <div class="multi_select_box">
+          <span class="name">{{filter_name}}</span>
+          <ul>
+            <!-- 分割线 -->
+            <li
+              v-for="item in filter_items"
+              v-on:click="multiSelect(item.index)"
+              v-bind:class="{is_multi_selected: item.is_small_select}"
+              v-bind:key="item.index"
+            >
+              <a type="radio">
+                <span v-bind:class="{multi_selected: item.is_select}">
+                  <i class="icon-font i-tick"></i>
+                </span>
+                {{item.name}}
+              </a>
+            </li>
+            <!-- 分割线 -->
+          </ul>
+        </div>
+        <!-- 多条件筛选   END -->
+        <!-- 更多筛选条件   START -->
+        <div class="more_filter">
+          <span class="name">{{more_filter_name}}</span>
+          <ul>
+            <li class="sale">
+              <span>{{sale_item.name}}</span>
+              <input
+                maxlength="8"
+                v-model="sale_item.value"
+                v-bind:class="{input_error:sale_item.is_error}"
+                onkeyup="onlyPositiveInt(this)"
+              >
+            </li>
+            <li class="score">
+              <span>{{score_item.name}}</span>
+              <input
+                maxlength="3"
+                v-model="score_item.value"
+                v-bind:class="{input_error:score_item.is_error}"
+                onkeyup="zeroToFive(this)"
+              >
+              <span class="tip">{{score_item.tip}}</span>
+            </li>
+            <li class="quan">
+              <span>{{quan_item.name}}</span>
+              <input
+                maxlength="8"
+                class="one"
+                v-model="quan_item.start_price"
+                v-bind:class="{input_error:quan_item.is_start_error}"
+                placeholder="最低价"
+                onkeyup="onlyPositiveInt(this)"
+              >
+              <span class="split">—</span>
+              <input
+                maxlength="8"
+                class="two"
+                v-model="quan_item.end_price"
+                v-bind:class="{input_error:quan_item.is_end_error}"
+                placeholder="最高价"
+                onkeyup="onlyPositiveInt(this)"
+              >
+            </li>
+
+            <li class="btn">
+              <span @click="clear" class="confirm">重置</span>
+              <span @click="confirm" class="confirm">确认</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- 重置、确认按钮 -->
+      <div class="btn_bottom_container">
+        <span class="confirm" @click="clear">重置</span>
+        <span class="confirm" @click="confirm">确认</span>
+      </div>
+      <!-- 更多筛选条件   END -->
+      <!-- 加载动画  START -->
+      <div v-if="is_loading" class="loading">
+        <img src="../images/loading.gif">
+      </div>
+      <!-- 加载动画  END -->
+    </div>
+
+    <!-- 排序方式   START -->
+    <div class="sort_way js_sort_way" v-cloak>
+      <!--  -->
+      <ul class="btn_box">
+        <!-- "综合" -->
+        <li class="btn" v-bind:class="{is_sort_selected:sort_item[0].is_select}">
+          <a @click="changeSortWay(0,'all')">综合</a>
+        </li>
+        <!-- "销量" -->
+        <li class="btn" v-bind:class="{is_sort_selected:sort_item[1].is_select}">
+          <a @click="changeSortWay(1,'goods_sale desc')">销量</a>
+        </li>
+        <!-- "价格" -->
+        <li class="btn price" v-bind:class="{is_sort_selected:sort_item[2].is_select}">
+          <a @click="sortByPrice">
+            价格
+            <span v-show="sort_item[2].is_select">
+              <i
+                ref="js_transform"
+                class="icon-font i-dropdown"
+                v-bind:class="{is_sort_selected:sort_item[2].is_select}"
+              ></i>
+            </span>
+          </a>
+        </li>
+        <!-- "列表显示切换,992及以上不显示" -->
+        <li class="btn list_toggle">
+          <a @click="toggleList">
+            <i v-show="toggle_list.is_first_icon" class="icon-font i-list-index"></i>
+            <i v-show="!toggle_list.is_first_icon" class="icon-font i-calendar-2"></i>
+          </a>
+        </li>
+        <!-- "筛选,992及以上不显示" -->
+        <li class="btn filter_btn">
+          <a ref="js_show_side" @click="toggleSide">筛选</a>
+        </li>
+      </ul>
+      <!--  -->
+      <!-- 遮罩,弹出擦边栏时防止误触 -->
+      <div v-show="is_show_shade" ref="js_shade" class="shade"></div>
+    </div>
+    <!-- 排序方式   end -->
+  </div>
+  <!-- 筛选   END -->
 </template>
 
 <script>
-
-
 export default {
-  name: "Filter",
+  name: "FilterComponent",
   props: {},
   data: function() {
     return {
-  
+      // 当前页面的app组件实例
+      app:{},
+      // 目录选择
+      catalog_name: "分类:",
+      catalog_value: "0",
+      catalog_items: [
+        {
+          name: "全部", // 目录名
+          value: 0, //目录对应值
+          is_select: true //是否被选中
+        },
+        {
+          name: "女装",
+          value: 1,
+          is_select: false
+        },
+        {
+          name: "男装",
+          value: 2,
+          is_select: false
+        },
+        {
+          name: "内衣",
+          value: 3,
+          is_select: false
+        },
+        {
+          name: "数码家电",
+          value: 4,
+          is_select: false
+        },
+        {
+          name: "美食",
+          value: 5,
+          is_select: false
+        },
+        {
+          name: "美妆个护",
+          value: 6,
+          is_select: false
+        },
+        {
+          name: "母婴",
+          value: 7,
+          is_select: false
+        },
+        {
+          name: "鞋包配饰",
+          value: 8,
+          is_select: false
+        },
+        {
+          name: "家居家装",
+          value: 9,
+          is_select: false
+        },
+        {
+          name: "文体车品",
+          value: 10,
+          is_select: false
+        },
+        {
+          name: "其他",
+          value: 11,
+          is_select: false
+        }
+      ],
+      // 多选筛选条件
+      filter_name: "筛选:",
+      filter_value: "", //当前(选中/取消)的是哪个,相应的从参数添加/删除
+      filter_items: [
+        {
+          name: "淘抢购", //名称
+          index: 1, //必须使用自定义的index，否则监听filter_value的函数中出现异常出现-0
+          an_name: "is_qiang", //搜索时的对应的参数名
+          is_select: false, //是否被选中
+          is_small_select: false //是否被选中(中小屏幕)
+        },
+        {
+          name: "聚划算",
+          index: 2,
+          an_name: "is_ju",
+          is_select: false,
+          is_small_select: false
+        },
+        {
+          name: "天猫",
+          index: 3,
+          an_name: "is_tmall",
+          is_select: false,
+          is_small_select: false
+        },
+        {
+          name: "金牌卖家",
+          index: 4,
+          an_name: "is_gold",
+          is_select: false,
+          is_small_select: false
+        },
+        {
+          name: "极有家",
+          index: 5,
+          an_name: "is_ji",
+          is_select: false,
+          is_small_select: false
+        },
+        {
+          name: "海淘",
+          index: 6,
+          an_name: "is_hai",
+          is_select: false,
+          is_small_select: false
+        },
+        {
+          name: "运费险",
+          index: 7,
+          an_name: "is_yun",
+          is_select: false,
+          is_small_select: false
+        }
+      ], //更多 筛选条件
+      more_filter_name: "更多:",
+      //券后价格区间筛选
+      quan_item: {
+        name: "券后价格区间",
+        start_price: "", //最低价
+        end_price: "", //最高价
+        is_start_error: false, //输入是否合法
+        is_end_error: false
+      },
+      //评分筛选
+      score_item: {
+        name: "动态评分≥",
+        value: "",
+        tip: " (0分-5分)",
+        is_error: false //输入是否合法
+      },
+      //销量筛选
+      sale_item: {
+        name: "总销量≥",
+        value: "",
+        is_error: false //输入是否合法
+      },
+      is_loading: false,
+      is_show_side: false, //侧边栏当前是否显示
+      is_show_shade: false, //遮罩
+      sort_item: [
+        {
+          name: "综合", //名称
+          type: "", //类型
+          is_select: true //是否选中
+        },
+        {
+          name: "销量",
+          type: "goods_sale",
+          is_select: false
+          // 销量只有降序排序
+        },
+        {
+          name: "价格",
+          type: "goods_price",
+          is_select: false,
+          is_up: false //升序排序
+        }
+      ],
+      //  列表显示方式
+      toggle_list: {
+        is_first_icon: true
+      }
     };
   },
   created: function() {},
   methods: {
+    // 单选目录事件
+    selectCatalogItem: function(value) {
+      this.catalog_value = value;
+      for (var i = 0; i < this.catalog_items.length; ++i) {
+        this.catalog_items[i].is_select = false;
+      }
+      this.catalog_items[value].is_select = true;
 
+      // 参数中添加目录信息
+      if (this.catalog_value != 0) {
+        addProperty("goods_cid", this.catalog_value);
+      } else {
+        deleteProperty("goods_cid");
+      }
+    },
+    // 多选筛选条件事件
+    multiSelect: function(index) {
+      // 多选取消选中
+      if (this.filter_items[index - 1].is_select) {
+        this.filter_items[index - 1].is_select = false;
+        this.filter_value = "-" + index;
+        // if (isMidSmallScreen()) {
+        //小屏幕下选中背景变橙色标志
+        this.filter_items[index - 1].is_small_select = false;
+        // }
+      }
+      // 多选选中
+      else {
+        this.filter_items[index - 1].is_select = true;
+        this.filter_value = index;
+        // if (isMidSmallScreen()) {
+        this.filter_items[index - 1].is_small_select = true;
+        // }
+        //"淘抢购"和"聚划算"是互斥的
+        //当两个同时被选中时,取消之前被选中的那个
+        if (index == 1 && this.filter_items[1].is_select) {
+          //取消选中"聚划算"
+          this.filter_items[1].is_select = false;
+          this.filter_items[1].is_small_select = false;
+          // this.filter_value = "-2";
+          if (search_data.hasOwnProperty("is_ju")) {
+            delete search_data["is_ju"];
+          }
+        }
+        if (index == 2 && this.filter_items[0].is_select) {
+          //取消选中"淘抢购"
+          this.filter_items[0].is_select = false;
+          this.filter_items[0].is_small_select = false;
+          if (search_data.hasOwnProperty("is_qiang")) {
+            delete search_data["is_qiang"];
+          }
+        }
+      }
+      //向search_data中删除或添加参数
+      var index_temp = parseInt(this.filter_value);
+      if (index_temp < 0) {
+        index_temp = -index_temp;
+        deleteProperty(this.filter_items[index_temp - 1].an_name);
+      } else {
+        addProperty(this.filter_items[index_temp - 1].an_name, "1");
+      }
+    },
+    clear: function() {
+      this.resetCatalogItem();
+      this.resetMultiSelect();
+      this.resetInput();
+      js_goods_area.clearSearchData();
+      window.scrollTo(0, 0);
+      if (js_goods_area.can_ajax) {
+        //清空加载
+        loadGoods("");
+      }
+      console.log("Clear");
+    },
+    //重置目录
+    resetCatalogItem: function() {
+      this.catalog_value = "0";
+      for (var i = 1; i < this.catalog_items.length; ++i) {
+        this.catalog_items[i].is_select = false;
+      }
+      this.catalog_items[0].is_select = true;
+    },
+    //重置多选
+    resetMultiSelect: function() {
+      this.filter_value = "";
+      for (var i = 0; i < this.filter_items.length; ++i) {
+        this.filter_items[i].is_select = false;
+        this.filter_items[i].is_small_select = false;
+      }
+    },
+    //重置输入框
+    resetInput: function() {
+      this.sale_item.value = "";
+      this.score_item.value = "";
+      this.quan_item.start_price = "";
+      this.quan_item.end_price = "";
+    },
+    confirm: function() {
+      this.checkAfterCoupon();
+      this.deleteInputValue();
+      this.addInputValue();
+      if (
+        (js_goods_area.can_ajax && this.sale_item.value != "") ||
+        this.score_item.value != "" ||
+        this.quan_item.start_price != "" ||
+        this.quan_item.end_price != ""
+      ) {
+        //确认 加载
+        loadGoods("input");
+      }
+      console.log("Confirm");
+    },
+    //检查券后价
+    checkAfterCoupon: function() {
+      if (
+        isNumber(this.quan_item.start_price) &&
+        isNumber(this.quan_item.end_price)
+      ) {
+        var start = parseInt(this.quan_item.start_price);
+        var end = parseInt(this.quan_item.end_price);
+        if (start > end) {
+          var temp = this.quan_item.start_price;
+          this.quan_item.start_price = this.quan_item.end_price;
+          this.quan_item.end_price = temp;
+        }
+      }
+    },
+    //从search_data中删除input
+    deleteInputValue: function() {
+      if (search_data.hasOwnProperty("sale_num")) {
+        delete search_data["sale_num"];
+      }
+      if (search_data.hasOwnProperty("dsr")) {
+        delete search_data["dsr"];
+      }
+      if (search_data.hasOwnProperty("start_price")) {
+        delete search_data["start_price"];
+      }
+      if (search_data.hasOwnProperty("end_price")) {
+        delete search_data["end_price"];
+      }
+    },
+    //向search_data中添加input值
+    addInputValue: function() {
+      if (this.sale_item.value != "") {
+        search_data["sale_num"] = this.sale_item.value;
+      }
+      if (this.score_item.value != "") {
+        search_data["dsr"] = this.score_item.value;
+      }
+      if (this.quan_item.start_price != "") {
+        search_data["start_price"] = this.quan_item.start_price;
+      }
+      if (this.quan_item.end_price != "") {
+        search_data["end_price"] = this.quan_item.end_price;
+      }
+    },
+    // 价格排序
+    sortByPrice: function() {
+      this.changeSelectedColor(2);
+      this.transformIcon();
+      this.sort_item[2].is_up = !this.sort_item[2].is_up;
+    },
+    //  切换价格排序的icon
+    transformIcon: function() {
+      Velocity(this.$refs.js_transform, "stop");
+      if (!this.sort_item[2].is_up) {
+        Velocity(this.$refs.js_transform, {
+          "margin-top": "8px",
+          rotateZ: "-180deg"
+        });
+        // 价格升序排序
+        addProperty("sort", "goods_price asc");
+      } else {
+        Velocity(this.$refs.js_transform, {
+          "margin-top": "13px",
+          rotateZ: "0deg"
+        });
+        // 价格降序排序
+        addProperty("sort", "goods_price desc");
+      }
+    },
+    // 重置价格排序的icon
+    resetPriceIcon: function() {
+      Velocity(this.$refs.js_transform, "stop");
+      Velocity(this.$refs.js_transform, {
+        "margin-top": "13px",
+        rotateZ: "0deg"
+      });
+      this.sort_item[2].is_up = false;
+    },
+    // 切换列表显示方式
+    toggleList: function() {
+      this.toggle_list.is_first_icon = !this.toggle_list.is_first_icon;
+      js_goods_area.toggle_list = !js_goods_area.toggle_list;
+    },
+    // 显示筛选侧边
+    showSide: function() {
+      if (isMidSmallScreen() && !this.is_show_side) {
+        this.stopSideAnimate();
+        this.is_show_shade = true;
+        this.is_show_side = true;
+        Velocity(js_filter_container.$refs.js_filter_container, {
+          "margin-left": "-300px"
+        });
+        console.log("显示侧边栏");
+      }
+    },
+    // 隐藏筛选侧边
+    hideSide: function() {
+      if (isMidSmallScreen() && this.is_show_side) {
+        this.stopSideAnimate();
+        this.is_show_side = false;
+        this.is_show_shade = false;
+        Velocity(js_filter_container.$refs.js_filter_container, {
+          "margin-left": "0px"
+          // 同上
+        });
+        console.log("隐藏侧边栏");
+      }
+    },
+    // 切换侧边显示状态
+    toggleSide: function() {
+      if (this.is_show_side) {
+        this.hideSide();
+      } else {
+        this.showSide();
+      }
+    },
+    // 停止侧边动画(防止操作频率过快导致异常)
+    stopSideAnimate: function() {
+      Velocity(js_filter_container.$refs.js_filter_container, "stop");
+    },
+    // 切换排序方式
+    changeSortWay: function(index, way) {
+      this.changeSelectedColor(index);
+      addProperty("sort", way);
+    },
+    // 改变被选中的排序按钮的颜色
+    changeSelectedColor: function(index) {
+      // 价格图标按钮重置
+      if (index != 2) {
+        this.resetPriceIcon();
+      }
+      for (var i = 0; i < this.sort_item.length; ++i) {
+        this.sort_item[i].is_select = false;
+      }
+      this.sort_item[index].is_select = true;
+    }
+    // 事件 end
   }
+  //
 };
 </script>
 
 <style>
+/* -----------------------------------------------筛选   开始----------------------------------- */
+.filter_box {
+  max-width: 1190px;
+  margin: auto;
+  font-size: 0;
+}
 
+.filter_box .filter_container {
+  position: relative;
+  padding-bottom: 10px;
+  background-color: #ffffff;
+}
+
+.filter_box > div ul {
+  display: inline-block;
+  font-size: 0;
+}
+
+.filter_box .select_box ul li {
+  display: inline-block;
+  height: 30px;
+  margin: 10px 0 0 10px;
+  padding: 0 10px;
+  font-size: 15px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.filter_box .select_box ul li:hover {
+  cursor: pointer;
+  color: #ffffff;
+  background-color: #fa5319;
+}
+
+.catalog_btn_bg {
+  color: #ffffff;
+  background-color: #fa5319 !important;
+}
+
+.filter_box .multi_select_box {
+  font-size: 0;
+}
+
+.filter_box .multi_select_box ul li {
+  display: inline-block;
+  height: 30px;
+  font-size: 15px;
+  line-height: 30px;
+  text-align: center;
+  margin: 10px 0 0 15px;
+}
+
+.filter_box .multi_select_box ul li a {
+  display: block;
+  height: 30px;
+}
+
+.filter_box .multi_select_box ul li a:hover {
+  cursor: pointer;
+}
+
+.filter_box .multi_select_box ul li a > span {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  vertical-align: middle;
+  border-radius: 5px;
+  background-color: #e5e5e5;
+}
+
+.filter_box .multi_select_box ul li a > span i {
+  display: block;
+  width: 15px;
+  height: 15px;
+  font-size: 8px;
+  text-align: center;
+  line-height: 15px;
+  color: #ffffff;
+  border-radius: 5px;
+}
+
+.multi_selected {
+  background-color: #fa5319 !important;
+}
+
+.filter_box > div .name {
+  display: inline-block;
+  margin: 10px 0 0 12px;
+  line-height: 30px;
+  font-size: 15px;
+  vertical-align: top;
+  color: #666666;
+}
+
+.filter_box > div .name:hover {
+  cursor: default;
+}
+
+.filter_box .more_filter ul li {
+  display: inline-block;
+  font-size: 0;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  margin: 10px 0 0 40px;
+  vertical-align: top;
+}
+
+.filter_box .more_filter ul li:first-child {
+  margin-left: 15px;
+}
+
+.filter_box .more_filter ul li > span {
+  display: inline-block;
+  height: 30px;
+  font-size: 15px;
+  vertical-align: top;
+}
+
+.filter_box .more_filter ul li > input {
+  display: inline-block;
+  width: 45px;
+  height: 20px;
+  margin: 5px 5px 0 10px;
+  outline: none;
+  font-size: 13px;
+  vertical-align: top;
+  border-radius: 5px;
+  padding-bottom: 1px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #dddddd;
+}
+
+.filter_box .more_filter ul li > input:focus {
+  border-color: #fa5319;
+  box-shadow: 0 0 5px #fa5319;
+}
+
+.filter_box .more_filter ul li .tip {
+  margin-left: 1px;
+  color: #666666;
+}
+
+.filter_box .more_filter ul li .split {
+  color: #999999;
+}
+
+.filter_box .more_filter ul .btn {
+  margin-left: 90px;
+}
+
+.filter_box .more_filter ul li .confirm {
+  width: 50px;
+  height: 25px;
+  line-height: 25px;
+  margin-left: 15px;
+  margin-top: 3px;
+  color: #ffffff;
+  border-radius: 5px;
+  font-size: 14px;
+  vertical-align: middle;
+  background-color: #fa5319;
+}
+
+.filter_box .more_filter ul li .confirm:first-child {
+  background-color: #666666;
+}
+
+.filter_box .more_filter ul li .confirm:hover {
+  cursor: pointer;
+}
+
+.filter_box .loading {
+  position: absolute;
+  z-index: 50;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 30px;
+  margin: -15px 0 0 -25px;
+  text-align: center;
+  line-height: 50px;
+}
+
+.filter_box .loading > img {
+  width: 50px;
+}
+
+/* 排序 START */
+.filter_box .sort_way {
+  min-height: 30px;
+}
+
+.filter_box .sort_way .btn_box {
+  display: block;
+  background-color: #eeeeee;
+}
+
+.filter_box .sort_way .btn_box .btn {
+  display: inline-block;
+  width: 140px;
+  height: 30px;
+  font-size: 0;
+  vertical-align: top;
+  text-align: center;
+}
+
+.filter_box .sort_way .btn_box .btn:hover {
+  cursor: pointer;
+  color: #fa5319;
+}
+
+.filter_box .sort_way .btn_box .btn > a {
+  display: block;
+  height: 30px;
+  line-height: 29px;
+  font-size: 15px;
+  text-align: center;
+}
+
+/* "列表切换"按钮  992及以上不显示 */
+.filter_box .sort_way .btn_box .list_toggle {
+  display: none;
+}
+
+/* "筛选"按钮  992及以上不显示 */
+.filter_box .sort_way .btn_box .filter_btn {
+  display: none;
+}
+
+.filter_box .sort_way .btn_box .price span {
+  display: inline-block;
+  width: 12px;
+  height: 100%;
+  vertical-align: top;
+}
+
+.filter_box .sort_way .btn_box .price i {
+  display: block;
+  margin-top: 13px;
+  font-size: 6px;
+  line-height: 1;
+  color: #999999;
+}
+
+.is_sort_selected {
+  color: #fa5319 !important;
+}
+
+.input_error {
+  border-color: red !important;
+  box-shadow: 0 0 5px red;
+}
+
+@media (min-width: 992px) {
+  /* 遮罩 */
+  .filter_box .shade {
+    z-index: -1;
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .filter_box {
+    padding: 0 25px;
+    background-color: transparent;
+  }
+
+  .filter_box .filter_container {
+    padding-bottom: 10px;
+    background-color: #ffffff;
+  }
+
+  .filter_box .filter_container > div .name {
+    margin-left: 10px;
+  }
+
+  .filter_box .select_box > span {
+    margin-left: 32px;
+  }
+
+  .filter_box .multi_select_box > span {
+    margin-left: 32px;
+  }
+
+  .filter_box .more_filter > span {
+    margin-left: 32px;
+  }
+
+  .filter_box .sort_way {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 991px) {
+  .filter_box .filter_container {
+    position: fixed;
+    top: 0;
+    left: 100%;
+    z-index: 999;
+    width: 300px;
+    height: 100%;
+    padding-bottom: 0;
+    background-color: #ffffff;
+  }
+
+  .filter_box .filter_container .btn_top_container {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 50px);
+    overflow: auto;
+  }
+
+  .filter_box .filter_container .name {
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    text-indent: 1em;
+    font-weight: bold;
+  }
+
+  .filter_box .select_box > ul {
+    padding: 0 0 0 15px;
+    text-align: left;
+  }
+
+  .filter_box .select_box > ul > li {
+    margin-left: 0;
+    padding: 0;
+    width: 80px;
+    margin-right: 15px;
+    background-color: #eeeeee;
+  }
+
+  .filter_box .multi_select_box .name {
+    margin-top: 20px;
+  }
+
+  .filter_box .multi_select_box ul li a > span:first-child {
+    display: none;
+  }
+
+  .filter_box .multi_select_box ul {
+    padding: 0 0 0 15px;
+    text-align: left;
+  }
+
+  .filter_box .multi_select_box > ul > li {
+    margin-left: 0;
+    padding: 0;
+    width: 80px;
+    margin-right: 15px;
+    border-radius: 5px;
+    background-color: #eeeeee;
+  }
+
+  .is_multi_selected {
+    color: #ffffff;
+    background-color: #fa5319 !important;
+  }
+
+  .filter_box .more_filter .name {
+    display: none;
+  }
+
+  .filter_box .more_filter ul {
+    display: block;
+    padding: 0 0 15px 15px;
+  }
+
+  .filter_box .more_filter ul li {
+    display: block;
+    height: auto;
+    margin: 12px 0 0 0;
+    text-align: left;
+  }
+
+  .filter_box .more_filter ul li:first-child {
+    margin: 15px 0 0 0;
+  }
+
+  .filter_box .more_filter ul li > span:first-child {
+    font-weight: bold;
+    color: #666666;
+    text-align: left;
+  }
+
+  .filter_box .more_filter ul li input {
+    width: 50px;
+    height: 25px;
+    margin-top: 3px;
+    margin-left: 15px;
+  }
+
+  .filter_box .more_filter .sale input {
+    margin-left: 30px;
+  }
+
+  .filter_box .more_filter .score .tip {
+    margin-left: 5px;
+  }
+
+  .filter_box .more_filter .quan > span:first-child {
+    display: block;
+  }
+
+  .filter_box .more_filter .quan .one {
+    margin-left: 0;
+  }
+
+  .filter_box .more_filter .quan input {
+    width: 60px;
+    height: 30px;
+    margin: 10px 0 0 0;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 15px;
+  }
+
+  .filter_box .more_filter .quan .split {
+    margin: 10px 15px 0 15px;
+  }
+
+  .filter_box .more_filter .btn {
+    display: none !important;
+  }
+
+  .filter_box .more_filter ul .btn .confirm {
+    display: inline-block !important;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
+    margin: 10px 15px 0 0;
+    font-weight: normal;
+    color: #ffffff;
+    text-align: center;
+  }
+
+  .filter_box .more_filter ul li .confirm:first-child {
+    margin-left: 0;
+  }
+
+  .filter_box .filter_container .btn_bottom_container {
+    position: absolute;
+    top: 100%;
+    margin-top: -50px;
+    width: 100%;
+    height: 50px;
+    text-align: right;
+  }
+
+  .filter_box .btn_bottom_container .confirm {
+    display: inline-block !important;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
+    margin: 10px 15px 0 0;
+    font-weight: normal;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #fa5319;
+  }
+
+  .filter_box .btn_bottom_container .confirm:first-child {
+    margin-left: 0;
+    background-color: #666666;
+  }
+
+  .filter_box .sort_way .btn_box .filter_btn {
+    display: inline-block;
+  }
+
+  /* 遮罩  开始 */
+  .filter_box .sort_way .shade {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+    filter: alpha(40);
+    background-color: #666666;
+  }
+
+  /* 遮罩  结束 */
+}
+
+@media (max-width: 767px) {
+  .filter_box .sort_way .btn_box .btn {
+    width: 20%;
+  }
+}
+
+/* 屏幕宽度大于450不显示列表切换按钮 */
+@media (max-width: 450px) {
+  .filter_box .sort_way .btn_box .list_toggle {
+    display: inline-block;
+  }
+}
+
+/* -----------------------------------------------筛选   结束----------------------------------- */
 </style>
