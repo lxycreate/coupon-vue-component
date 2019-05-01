@@ -356,12 +356,12 @@ export default {
         if (index == 1 && this.filter_items[1].is_select) {
           //取消选中"聚划算"
           this.filter_items[1].is_select = false;
-          app.deletePropertyNoAjax('is_ju');
+          app.deletePropertyNoAjax(['is_ju']);
         }
         if (index == 2 && this.filter_items[0].is_select) {
           //取消选中"淘抢购"
           this.filter_items[0].is_select = false;
-          app.deletePropertyNoAjax('is_qiang');
+          app.deletePropertyNoAjax(['is_qiang']);
         }
       }
       //向search_data中删除或添加参数
@@ -377,13 +377,15 @@ export default {
       this.resetCatalogItem();
       this.resetMultiSelect();
       this.resetInput();
-      js_goods_area.clearSearchData();
+      app.resetAjaxPars();
+      // 未完成  start
       window.scrollTo(0, 0);
       if (js_goods_area.can_ajax) {
         //清空加载
         loadGoods("");
       }
       console.log("Clear");
+       // 未完成  end
     },
     //重置目录
     resetCatalogItem: function() {

@@ -20,6 +20,8 @@ export default {
     return {
       // 存储ajax参数的对象
       ajax_pars: {},
+      // 当前页码
+      page_num: 1,
       // 可以进行ajax请求的标志
       can_ajax: true
     };
@@ -53,6 +55,36 @@ export default {
         // 搜索框吸顶   end
       };
     },
+    // 初始化ajax_pars
+    initAjaxPars: function() {
+      this.page_num = 1;
+      this.addPropertyNoAjax({
+        page_num: this.page_num,
+        page_size: this.page_size
+      });
+      //特惠商品
+      if (now_page_name == "bargain") {
+        this.addPropertyNoAjax({ end_price: 10 });
+      }
+      //百元精品
+      if (now_page_name == "hundred") {
+        this.addPropertyNoAjax({ end_price: 100 });
+      }
+    },
+    // 重置ajax_pars
+    resetAjaxPars: function() {
+      var temp = this.ajax_pars["sort"];
+      var word = this.ajax_pars["word"];
+      this.ajax_pars = {};
+      //保留排序方式
+      this.addPropertyNoAjax({ sort: temp });
+      //搜索页面保留搜索关键词
+      if (now_page_name == "search") {
+        this.addPropertyNoAjax({ word: word });
+      }
+      //再次初始化
+      this.initAjaxPars();
+    },
     // 向ajax_pars中添加参数
     addProperty: function(pro_name, pro_value) {
       if (pro_name != undefined && pro_value != undefined && this.can_ajax) {
@@ -77,12 +109,12 @@ export default {
     // 从ajax_pars中删除属性但是不进行ajax请求
     deletePropertyNoAjax: function(items) {
       for (var item of items) {
-        if(item!=undefined&&this.ajax_pars.hasOwnProperty(item)){
+        if (item != undefined && this.ajax_pars.hasOwnProperty(item)) {
           delete this.ajax_pars[item];
         }
       }
     }
-    // 
+    //
   }
   //
 };
