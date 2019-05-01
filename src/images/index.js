@@ -19,6 +19,7 @@ function mouseDown(event) {
     // }
 }
 
+var bus = new Vue();
 var vueApp = new Vue({
     el: '#app',
     template: '<App/>',

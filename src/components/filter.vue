@@ -147,6 +147,8 @@
       <div v-show="is_show_side" ref="js_shade" class="shade"></div>
     </div>
     <!-- 排序方式   end -->
+    <!-- 加载动画 -->
+    <span v-show="is_loading" class="loading_text">加载中...</span>
   </div>
   <!-- 筛选   END -->
 </template>
@@ -1134,6 +1136,13 @@ export default {
     display: inline-block;
   }
 }
-
+.filter_box .loading_text {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    color: #666666;
+    text-align: center;
+}
 /* -----------------------------------------------筛选   结束----------------------------------- */
 </style>

@@ -2,7 +2,7 @@
   <!-- 导航   START -->
   <div class="header">
     <!-- logo和搜索框   START -->
-    <div v-bind:class="{ceil_fixed : is_fixed_ceil}" class="ceil_box js_ceil_box">
+    <div v-bind:class="{ceil_fixed : is_fixed_ceil}" class="ceil_box">
       <div class="header_logo">
         <a v-show="is_show_logo" class="logo_box" href="index.html">
           <img src="../images/logo.png">
@@ -59,11 +59,11 @@ export default {
           "search.html?search=" + encodeURI(this.search_word);
       }
       if (now_page_name == "search" && this.search_word != "") {
-        scrollToTopDirect();
+        app.scrollToTopDirect();
         app.addProperty("word", this.search_word);
       }
       if (now_page_name == "search" && this.search_word == "") {
-        search_data["word"] = "";
+        app.addPropertyNoAjax({word:''});
         app.deleteProperty("word");
       }
     },

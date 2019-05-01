@@ -1,17 +1,22 @@
 <template>
   <div class="middle">
     <FilterComponent/>
+    <Goods :goods_list="goods_list"></Goods>
   </div>
 </template>
 
 <script>
 import FilterComponent from "./filter.vue";
+import Goods from "./goods.vue";
 export default {
   name: "MiddleComponent",
   components: {
-    FilterComponent
+    FilterComponent,
+    Goods
   },
-  props: {},
+  props: {
+    goods_list: Array
+  },
   data: function() {
     return {};
   },

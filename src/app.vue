@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <HeaderComponent ref="HeaderComponent"/>
-    <MiddleComponent/>
+    <MiddleComponent :goods_list="goods_list"/>
   </div>
 </template>
 <script>
@@ -22,8 +22,16 @@ export default {
       ajax_pars: {},
       // 当前页码
       page_num: 1,
+      // 每页数据量
+      page_size: 20,
       // 可以进行ajax请求的标志
-      can_ajax: true
+      can_ajax: true,
+      // 商品列表
+      goods_list: [
+        {
+          name: "123"
+        }
+      ]
     };
   },
   created: function() {
