@@ -86,7 +86,7 @@ export default {
       this.is_show_logo = true;
     },
     test: function() {
-      console.log('test header');
+      console.log("test header");
     }
     //
   }
@@ -94,9 +94,6 @@ export default {
 </script>
 
 <style>
-#app {
-  height: 1920px;
-}
 /* -----------------------------------------------导航   开始----------------------------------- */
 .header {
   position: relative;

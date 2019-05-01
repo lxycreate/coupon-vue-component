@@ -323,6 +323,7 @@ export default {
   },
   created: function() {
     app = this.$root.$children[0];
+    this.mouseDown();
   },
   methods: {
     // 单选目录事件
@@ -511,6 +512,21 @@ export default {
       });
       this.sort_item[2].is_up = false;
     },
+    // 鼠标按下事件
+    mouseDown: function() {
+      var _self = this;
+      document.body.addEventListener("click", function(event) {
+        var point = event || window.event;
+        var screen_width = document.body.clientWidth;
+        if (screen_width < 992 && screen_width - point.clientX > 300 && event.target != _self.$refs.js_show_side) {
+            console.log('在侧栏外');
+            _self.hideSide();
+        }
+        if (event.target == _self.$refs.js_show_side) {
+            console.log("单击筛选");
+        }
+      });
+    },
     // 切换列表显示方式
     toggleList: function() {
       this.toggle_list.is_first_icon = !this.toggle_list.is_first_icon;
@@ -518,10 +534,10 @@ export default {
     },
     // 显示筛选侧边
     showSide: function() {
-      if (isMidSmallScreen() && !this.is_show_side) {
+      if (app.isMidSmallScreen() && !this.is_show_side) {
         this.stopSideAnimate();
         this.is_show_side = true;
-        Velocity(js_filter_container.$refs.js_filter_container, {
+        Velocity(this.$refs.js_filter_container, {
           "margin-left": "-300px"
         });
         console.log("显示侧边栏");
@@ -529,10 +545,10 @@ export default {
     },
     // 隐藏筛选侧边
     hideSide: function() {
-      if (isMidSmallScreen() && this.is_show_side) {
+      if (app.isMidSmallScreen() && this.is_show_side) {
         this.stopSideAnimate();
         this.is_show_side = false;
-        Velocity(js_filter_container.$refs.js_filter_container, {
+        Velocity(this.$refs.js_filter_container, {
           "margin-left": "0px"
           // 同上
         });
@@ -549,7 +565,7 @@ export default {
     },
     // 停止侧边动画(防止操作频率过快导致异常)
     stopSideAnimate: function() {
-      Velocity(js_filter_container.$refs.js_filter_container, "stop");
+      Velocity(this.$refs.js_filter_container, "stop");
     },
     // 切换排序方式
     changeSortWay: function(index, way) {

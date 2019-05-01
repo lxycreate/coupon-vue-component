@@ -113,6 +113,14 @@ export default {
           delete this.ajax_pars[item];
         }
       }
+    },
+    //判断当前是不是中小屏幕
+    isMidSmallScreen: function() {
+      var screen_width = document.body.clientWidth;
+      if (screen_width >= 992) {
+        return false;
+      }
+      return true;
     }
     //
   }
