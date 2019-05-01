@@ -10,7 +10,7 @@ import MiddleComponent from "./components/middle.vue";
 import Velocity from "velocity-animate";
 
 export default {
-  name: "app",
+  name: "App",
   components: {
     HeaderComponent,
     MiddleComponent
@@ -27,6 +27,7 @@ export default {
     };
   },
   created: function() {
+    app = this;
     this.listenScrollUpDown();
   },
   methods: {
@@ -121,15 +122,6 @@ export default {
         return false;
       }
       return true;
-    },
-    // 判断是否是数字
-    isNumber: function(val) {
-      var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-      if (regPos.test(val)) {
-        return true;
-      } else {
-        return false;
-      }
     }
     //
   }

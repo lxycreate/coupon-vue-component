@@ -49,11 +49,21 @@
           <ul>
             <li class="sale">
               <span>{{sale_item.name}}</span>
-              <input maxlength="8" v-model="sale_item.value" onkeyup="onlyPositiveInt(this)">
+              <input
+                maxlength="8"
+                v-model="sale_item.value"
+                v-on:keyup="onlyPositiveInt"
+                v-on:blur="fixValueRemains(sale_item)"
+              >
             </li>
             <li class="score">
               <span>{{score_item.name}}</span>
-              <input maxlength="3" v-model="score_item.value" onkeyup="zeroToFive(this)">
+              <input
+                maxlength="3"
+                v-model="score_item.value"
+                v-on:keyup="zeroToFive"
+                v-on:blur="fixValueRemains(score_item)"
+              >
               <span class="tip">{{score_item.tip}}</span>
             </li>
             <li class="quan">
@@ -63,7 +73,8 @@
                 class="one"
                 v-model="quan_item.start_price"
                 placeholder="最低价"
-                onkeyup="onlyPositiveInt(this)"
+                v-on:keyup="onlyPositiveInt"
+                v-on:blur="fixValueRemains(quan_item)"
               >
               <span class="split">—</span>
               <input
@@ -71,7 +82,8 @@
                 class="two"
                 v-model="quan_item.end_price"
                 placeholder="最高价"
-                onkeyup="onlyPositiveInt(this)"
+                v-on:keyup="onlyPositiveInt"
+                v-on:blur="fixValueRemains(quan_item)"
               >
             </li>
 
@@ -145,8 +157,6 @@ export default {
   props: {},
   data: function() {
     return {
-      // 当前页面的app组件实例
-      app: {},
       // 目录选择
       catalog_value: "0",
       catalog_items: [
@@ -256,7 +266,7 @@ export default {
           an_name: "is_yun",
           is_select: false
         }
-      ], 
+      ],
       //券后价格区间筛选
       quan_item: {
         name: "券后价格区间",
@@ -303,7 +313,6 @@ export default {
     };
   },
   created: function() {
-    app = this.$root.$children[0];
     this.mouseDown();
   },
   methods: {
@@ -346,7 +355,7 @@ export default {
           app.deletePropertyNoAjax(["is_qiang"]);
         }
       }
-      //向search_data中删除或添加参数
+      //向ajax_pars中删除或添加参数
       var index_temp = parseInt(this.filter_value);
       if (index_temp < 0) {
         index_temp = -index_temp;
@@ -424,8 +433,8 @@ export default {
     //检查券后价是否是输入的最低价大于最高价
     checkAfterCoupon: function() {
       if (
-        app.isNumber(this.quan_item.start_price) &&
-        app.isNumber(this.quan_item.end_price)
+        this.isNumber(this.quan_item.start_price) &&
+        this.isNumber(this.quan_item.end_price)
       ) {
         var start = parseInt(this.quan_item.start_price);
         var end = parseInt(this.quan_item.end_price);
@@ -436,11 +445,72 @@ export default {
         }
       }
     },
-    //从search_data中删除input
+    // 判断是否是数字
+    isNumber: function(val) {
+      var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+      if (regPos.test(val)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // 修复输入后在相应的value中残留的事件
+    fixValueRemains: function(obj) {
+      if (obj == this.sale_item) {
+        if (this.checkHasLetter(obj.value)) {
+          this.sale_item.value = obj.value.replace(/\D/g, "");
+        }
+      }
+      if (obj == this.score_item) {
+        if (this.checkHasLetter(obj.value)) {
+          this.score_item.value = obj.value.replace(/[^\d.]/g, "");
+        }
+      }
+      if (obj == this.quan_item) {
+        if (this.checkHasLetter(obj.start_price)) {
+          this.quan_item.start_price = obj.start_price.replace(/\D/g, "");
+        }
+        if (this.checkHasLetter(obj.end_price)) {
+          this.quan_item.end_price = obj.end_price.replace(/\D/g, "");
+        }
+      }
+    },
+    // 检查字符串里是否含有字母
+    checkHasLetter: function(str) {
+      var length = str.length;
+      for (var i = 0; i < length; ++i) {
+        if (
+          (str[i] >= "a" && str[i] <= "z") ||
+          (str[i] >= "A" && str[i] <= "Z")
+        ) {
+          return true;
+        }
+      }
+      return false;
+    }, //只输入正整数
+    onlyPositiveInt: function(event) {
+      event.target.value = event.target.value.replace(/\D/g, "");
+    },
+    //0-5
+    zeroToFive: function(event) {
+      if (event.target.value[0] == ".") {
+        event.target.value = event.target.value.substr(1);
+      }
+      event.target.value = event.target.value.replace(/[^\d.]/g, ""); //清除“数字”和“.”以外的字符
+      event.target.value = event.target.value.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+
+      if (this.isNumber(event.target.value)) {
+        var temp = parseFloat(event.target.value);
+        if (temp > 5) {
+          event.target.value = "";
+        }
+      }
+    },
+    //从ajax_pars中删除input
     deleteInputValue: function() {
       app.deletePropertyNoAjax(["sale_num", "dsr", "start_price", "end_price"]);
     },
-    //向search_data中添加input值
+    //向ajax_pars中添加input值
     addInputValue: function() {
       var obj = {};
       if (this.sale_item.value != "") {
@@ -575,6 +645,11 @@ export default {
   }
   //
 };
+//只输入正整数
+function onlyPositiveInt(event) {
+  console.log(event);
+  event.value = event.value.replace(/\D/g, "");
+}
 </script>
 
 <style>

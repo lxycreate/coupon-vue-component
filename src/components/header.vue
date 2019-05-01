@@ -41,8 +41,6 @@ export default {
   props: {},
   data: function() {
     return {
-      // 当前页面app组件实例
-      app: {},
       // 是否显示logo
       is_show_logo: true,
       // 搜索框是否吸顶
@@ -52,7 +50,6 @@ export default {
     };
   },
   created: function() {
-    app = this.$root.$children[0];
   },
   methods: {
     // 搜索
