@@ -457,37 +457,17 @@ export default {
     // 修复输入后在相应的value中残留的事件
     fixValueRemains: function(obj) {
       if (obj == this.sale_item) {
-        if (this.checkHasLetter(obj.value)) {
-          this.sale_item.value = obj.value.replace(/\D/g, "");
-        }
+        this.sale_item.value = obj.value.replace(/\D/g, "");
       }
       if (obj == this.score_item) {
-        if (this.checkHasLetter(obj.value)) {
-          this.score_item.value = obj.value.replace(/[^\d.]/g, "");
-        }
+        this.score_item.value = obj.value.replace(/[^\d.]/g, "");
       }
       if (obj == this.quan_item) {
-        if (this.checkHasLetter(obj.start_price)) {
-          this.quan_item.start_price = obj.start_price.replace(/\D/g, "");
-        }
-        if (this.checkHasLetter(obj.end_price)) {
-          this.quan_item.end_price = obj.end_price.replace(/\D/g, "");
-        }
+        this.quan_item.start_price = obj.start_price.replace(/\D/g, "");
+        this.quan_item.end_price = obj.end_price.replace(/\D/g, "");
       }
     },
-    // 检查字符串里是否含有字母
-    checkHasLetter: function(str) {
-      var length = str.length;
-      for (var i = 0; i < length; ++i) {
-        if (
-          (str[i] >= "a" && str[i] <= "z") ||
-          (str[i] >= "A" && str[i] <= "Z")
-        ) {
-          return true;
-        }
-      }
-      return false;
-    }, //只输入正整数
+    //只输入正整数
     onlyPositiveInt: function(event) {
       event.target.value = event.target.value.replace(/\D/g, "");
     },
