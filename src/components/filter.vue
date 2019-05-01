@@ -29,7 +29,7 @@
             <li
               v-for="item in filter_items"
               v-on:click="multiSelect(item.index)"
-              v-bind:class="{is_multi_selected: item.is_small_select}"
+              v-bind:class="{is_multi_selected: item.is_select}"
               v-bind:key="item.index"
             >
               <a type="radio">
@@ -118,7 +118,7 @@
           v-bind:class="{price:index==2,is_sort_selected:item.is_select}"
           v-bind:key="index"
         >
-          <a v-if="index!=2" @click="changeSortWay(index,item.type)">{{item.name}}</a>
+          <a v-if="index!=2" @click="changeSortWay(index,item.way)">{{item.name}}</a>
           <a v-else @click="sortByPrice">
             {{item.name}}
             <span v-show="item.is_select">
@@ -232,50 +232,43 @@ export default {
           name: "淘抢购", //名称
           index: 1, //必须使用自定义的index，否则监听filter_value的函数中出现异常出现-0
           an_name: "is_qiang", //搜索时的对应的参数名
-          is_select: false, //是否被选中
-          is_small_select: false //是否被选中(中小屏幕)
+          is_select: false //是否被选中
         },
         {
           name: "聚划算",
           index: 2,
           an_name: "is_ju",
-          is_select: false,
-          is_small_select: false
+          is_select: false
         },
         {
           name: "天猫",
           index: 3,
           an_name: "is_tmall",
-          is_select: false,
-          is_small_select: false
+          is_select: false
         },
         {
           name: "金牌卖家",
           index: 4,
           an_name: "is_gold",
-          is_select: false,
-          is_small_select: false
+          is_select: false
         },
         {
           name: "极有家",
           index: 5,
           an_name: "is_ji",
-          is_select: false,
-          is_small_select: false
+          is_select: false
         },
         {
           name: "海淘",
           index: 6,
           an_name: "is_hai",
-          is_select: false,
-          is_small_select: false
+          is_select: false
         },
         {
           name: "运费险",
           index: 7,
           an_name: "is_yun",
-          is_select: false,
-          is_small_select: false
+          is_select: false
         }
       ], //更多 筛选条件
       more_filter_name: "更多:",
@@ -306,18 +299,18 @@ export default {
       sort_item: [
         {
           name: "综合", //名称
-          type: "all", //排序类型
+          way: "all", //排序类型
           is_select: true //是否选中
         },
         {
           name: "销量",
-          type: "goods_sale desc",
+          way: "goods_sale desc",
           is_select: false
           // 销量只有降序排序
         },
         {
           name: "价格",
-          type: "goods_price",
+          way: "goods_price",
           is_select: false,
           is_up: false //升序排序
         }
@@ -353,45 +346,31 @@ export default {
       if (this.filter_items[index - 1].is_select) {
         this.filter_items[index - 1].is_select = false;
         this.filter_value = "-" + index;
-        // if (isMidSmallScreen()) {
-        //小屏幕下选中背景变橙色标志
-        this.filter_items[index - 1].is_small_select = false;
-        // }
       }
       // 多选选中
       else {
         this.filter_items[index - 1].is_select = true;
         this.filter_value = index;
-        // if (isMidSmallScreen()) {
-        this.filter_items[index - 1].is_small_select = true;
-        // }
         //"淘抢购"和"聚划算"是互斥的
         //当两个同时被选中时,取消之前被选中的那个
         if (index == 1 && this.filter_items[1].is_select) {
           //取消选中"聚划算"
           this.filter_items[1].is_select = false;
-          this.filter_items[1].is_small_select = false;
-          // this.filter_value = "-2";
-          if (search_data.hasOwnProperty("is_ju")) {
-            delete search_data["is_ju"];
-          }
+          app.deletePropertyNoAjax('is_ju');
         }
         if (index == 2 && this.filter_items[0].is_select) {
           //取消选中"淘抢购"
           this.filter_items[0].is_select = false;
-          this.filter_items[0].is_small_select = false;
-          if (search_data.hasOwnProperty("is_qiang")) {
-            delete search_data["is_qiang"];
-          }
+          app.deletePropertyNoAjax('is_qiang');
         }
       }
       //向search_data中删除或添加参数
       var index_temp = parseInt(this.filter_value);
       if (index_temp < 0) {
         index_temp = -index_temp;
-        deleteProperty(this.filter_items[index_temp - 1].an_name);
+        app.deleteProperty(this.filter_items[index_temp - 1].an_name);
       } else {
-        addProperty(this.filter_items[index_temp - 1].an_name, "1");
+        app.addProperty(this.filter_items[index_temp - 1].an_name, "1");
       }
     },
     clear: function() {
@@ -419,7 +398,6 @@ export default {
       this.filter_value = "";
       for (var i = 0; i < this.filter_items.length; ++i) {
         this.filter_items[i].is_select = false;
-        this.filter_items[i].is_small_select = false;
       }
     },
     //重置输入框
@@ -566,7 +544,7 @@ export default {
     // 切换排序方式
     changeSortWay: function(index, way) {
       this.changeSelectedColor(index);
-      addProperty("sort", way);
+      app.addProperty("sort", way);
     },
     // 改变被选中的排序按钮的颜色
     changeSelectedColor: function(index) {

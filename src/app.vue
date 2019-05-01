@@ -67,15 +67,22 @@ export default {
       }
     },
     // 向ajax_pars中添加参数但是不进行ajax请求
-    addPropertyNoAjax: function(pro_name, pro_value) {
-      if (pro_name != undefined && pro_value != undefined) {
+    addPropertyNoAjax: function(obj) {
+      for (var item in obj) {
+        if (item != undefined && obj[item] != undefined) {
+          this.ajax_pars[item] = obj[item];
+        }
       }
     },
     // 从ajax_pars中删除属性但是不进行ajax请求
-    deletePropertyNoAjax: function(pro_name) {
-      if (this.ajax_pars.hasOwnProperty(pro_name)) {
+    deletePropertyNoAjax: function(items) {
+      for (var item of items) {
+        if(item!=undefined&&this.ajax_pars.hasOwnProperty(item)){
+          delete this.ajax_pars[item];
+        }
       }
     }
+    // 
   }
   //
 };
