@@ -113,6 +113,7 @@
 </template>
 
 <script>
+import Vue from "vue";
 export default {
   name: "Goods",
   components: {},
@@ -128,9 +129,7 @@ export default {
       is_more_goods: true //是否还有更多商品
     };
   },
-  created: function() {
-    // this.goods_list[0].item = 1;
-  },
+  created: function() {},
   methods: {
     // 显示‘没有更多了...’提示
     showNomoreTip() {
@@ -143,8 +142,16 @@ export default {
     // 切换列表显示方式
     toggleList() {
       this.toggle_list = !this.toggle_list;
+    },
+    // 显示运费险弹层
+    showLayer(item) {
+      Vue.set(item, "is_show_yun", true);
+    },
+    // 隐藏弹层
+    hideLayer: function(item) {
+      Vue.set(item, "is_show_yun", false);
     }
-    // 
+    //
   }
 };
 </script>
