@@ -2,18 +2,21 @@
   <div id="app">
     <HeaderComponent ref="HeaderComponent"/>
     <MiddleComponent/>
+    <FooterComponent/>
   </div>
 </template>
 <script>
 import HeaderComponent from "./components/header.vue";
 import MiddleComponent from "./components/middle.vue";
+import FooterComponent from "./components/footer.vue";
 import Velocity from "velocity-animate";
 
 export default {
   name: "App",
   components: {
     HeaderComponent,
-    MiddleComponent
+    MiddleComponent,
+    FooterComponent
   },
   props: {},
   data: function() {
