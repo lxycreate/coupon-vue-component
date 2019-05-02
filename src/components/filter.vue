@@ -619,8 +619,11 @@ export default {
     showLoading() {
       this.is_loading = true;
     },
+    closeLoading(){
+      this.is_loading = false;
+    },
     test: function() {
-      console.log("111");
+      console.log("filter");
     }
     // 事件 end
   }

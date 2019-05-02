@@ -124,16 +124,17 @@ export default {
     return {
       clear_list_flag: false, //清空数组标志
       toggle_list: false, //切换列表显示方式
-      is_loading: false, //排序加载动画
       is_loading_more: false, //加载下一页提示
-      is_more_goods: true, //是否还有更多商品
-      is_show_totop: false //是否显示滚动到顶部按钮
+      is_more_goods: true //是否还有更多商品
     };
   },
   created: function() {
     // this.goods_list[0].item = 1;
   },
   methods: {
+    showNomoreTip() {
+      this.is_more_goods = false;
+    },
     // 隐藏没有更多商品的提示
     hideNomoreTip() {
       this.is_more_goods = true;

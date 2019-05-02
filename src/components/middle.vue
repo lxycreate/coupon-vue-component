@@ -1,13 +1,15 @@
 <template>
   <div class="middle">
     <FilterComponent ref="FilterComponent"/>
-    <Goods ref="Goods"></Goods>
+    <Goods ref="Goods" :goods_list="goods_list"></Goods>
   </div>
 </template>
 
 <script>
 import FilterComponent from "./filter.vue";
 import Goods from "./goods.vue";
+import Axios from "axios";
+// import 'axios';
 export default {
   name: "MiddleComponent",
   components: {
@@ -28,11 +30,16 @@ export default {
       // 商品列表
       goods_list: [],
       // 清理goods_list的标志
-      clear_list_flag: false
+      clear_list_flag: false,
+      // 请求地址
+      base_url: "http://localhost:8088",
+      // 是否还有更多商品
+      is_more_goods: true
     };
   },
   created: function() {},
   mounted: function() {
+    console.log(this.base_url);
     this.initAjaxPars();
     this.loadGoods("");
   },
@@ -119,15 +126,86 @@ export default {
         // if (pro_name != "sort") {
         //   js_filter_container.is_loading = true;
         // }
-        var _self = this;
-        setTimeout(function() {
-          _self.getGoods();
+        setTimeout(() => {
+          this.getGoods(this.taskData);
         }, 300);
       }
     },
     // 获取商品数据
-    getGOods() {
-      console.log("111");
+    getGoods: function(callback) {
+      Axios({
+        url: this.base_url + "/getGoods",
+        method: "get",
+        params: this.ajax_pars
+      })
+        .then(response => {
+          //处理返回的数据
+          callback(response);
+          //可以加载下一页
+          this.can_ajax = true;
+        })
+        .catch(error => {
+          this.error_count++;
+          if (this.error_count >= 3) {
+            this.can_ajax = false;
+          }
+          this.closeLoading();
+          console.log("请求商品数据出错: " + error);
+        });
+    },
+    // 处理返回的数据
+    taskData(response) {
+      // 清空数组
+      if (this.clear_list_flag) {
+        this.clearListItems();
+      }
+      //关闭动画
+      this.closeLoading();
+      // 判断返回的数据是否等于每页数据量(如果是，说明还有下一页,否则没有)
+      if (response.data.goods.length == this.page_size) {
+        this.is_more_goods = true;
+      } else {
+        // 保证加载动画结束后才出现"没有更多了..."提示
+        setTimeout(() => {
+          this.is_more_goods = false;
+          this.$refs.Goods.hideNomoreTip();
+        }, 300);
+      }
+      // 将返回的商品数据装入Vue对象中的数组中,显示到界面中
+      if (response.data.goods != null && response.data.goods.length != 0) {
+        for (var i = 0; i < response.data.goods.length; ++i) {
+          var e = response.data.goods[i];
+          if (e.is_ju == "-1") {
+            e.is_ju = false;
+          }
+          if (e.is_qiang == "-1") {
+            e.is_qiang = false;
+          }
+          if (e.is_yun == "-1") {
+            e.is_yun = false;
+          }
+          if (e.is_gold == "-1") {
+            e.is_gold = false;
+          }
+          if (e.is_ji == "-1") {
+            e.is_ji = false;
+          }
+          if (e.is_hai == "-1") {
+            e.is_hai = false;
+          }
+          this.goods_list.push(e);
+        }
+      }
+    },
+    // 关闭动画
+    closeLoading() {
+      this.$refs.FilterComponent.closeLoading();
+      this.$refs.Goods.hideNomoreTip();
+    },
+    // 清空当前商品列表
+    clearListItems() {
+      this.goods_list = [];
+      this.initAjaxPars();
     }
     //
   }
