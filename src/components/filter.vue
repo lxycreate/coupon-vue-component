@@ -328,9 +328,9 @@ export default {
 
       // 参数中添加目录信息
       if (this.catalog_value != 0) {
-        app.addProperty("goods_cid", this.catalog_value);
+        this.$parent.addProperty("goods_cid", this.catalog_value);
       } else {
-        app.deleteProperty("goods_cid");
+        this.$parent.deleteProperty("goods_cid");
       }
     },
     // 多选筛选条件事件
@@ -349,21 +349,21 @@ export default {
         if (index == 1 && this.filter_items[1].is_select) {
           //取消选中"聚划算"
           this.filter_items[1].is_select = false;
-          app.deletePropertyNoAjax(["is_ju"]);
+          this.$parent.deletePropertyNoAjax(["is_ju"]);
         }
         if (index == 2 && this.filter_items[0].is_select) {
           //取消选中"淘抢购"
           this.filter_items[0].is_select = false;
-          app.deletePropertyNoAjax(["is_qiang"]);
+          this.$parent.deletePropertyNoAjax(["is_qiang"]);
         }
       }
       //向ajax_pars中删除或添加参数
       var index_temp = parseInt(this.filter_value);
       if (index_temp < 0) {
         index_temp = -index_temp;
-        app.deleteProperty(this.filter_items[index_temp - 1].an_name);
+        this.$parent.deleteProperty(this.filter_items[index_temp - 1].an_name);
       } else {
-        app.addProperty(this.filter_items[index_temp - 1].an_name, "1");
+        this.$parent.addProperty(this.filter_items[index_temp - 1].an_name, "1");
       }
     },
     // 重置
@@ -371,7 +371,7 @@ export default {
       this.resetCatalogItem();
       this.resetMultiSelect();
       this.resetInput();
-      app.resetAjaxPars();
+      this.$parent.resetAjaxPars();
       // 未完成  start
       window.scrollTo(0, 0);
       if (js_goods_area.can_ajax) {
@@ -485,7 +485,7 @@ export default {
     },
     //从ajax_pars中删除input
     deleteInputValue: function() {
-      app.deletePropertyNoAjax(["sale_num", "dsr", "start_price", "end_price"]);
+      this.$parent.deletePropertyNoAjax(["sale_num", "dsr", "start_price", "end_price"]);
     },
     //向ajax_pars中添加input值
     addInputValue: function() {
@@ -503,7 +503,7 @@ export default {
         obj.end_price = this.quan_item.end_price;
       }
       if (this.checkInputIsNotEmpty()) {
-        app.addPropertyNoAjax(obj);
+        this.$parent.addPropertyNoAjax(obj);
       }
     },
     // 价格排序
@@ -521,14 +521,14 @@ export default {
           rotateZ: "-180deg"
         });
         // 价格升序排序
-        app.addProperty("sort", "goods_price asc");
+        this.$parent.addProperty("sort", "goods_price asc");
       } else {
         Velocity(this.$refs.js_transform, {
           "margin-top": "13px",
           rotateZ: "0deg"
         });
         // 价格降序排序
-        app.addProperty("sort", "goods_price desc");
+        this.$parent.addProperty("sort", "goods_price desc");
       }
     },
     // 重置价格排序的icon
@@ -566,7 +566,7 @@ export default {
     },
     // 显示筛选侧边
     showSide: function() {
-      if (app.isMidSmallScreen() && !this.is_show_side) {
+      if (this.$parent.isMidSmallScreen() && !this.is_show_side) {
         this.stopSideAnimate();
         this.is_show_side = true;
         Velocity(this.$refs.js_filter_container, {
@@ -577,7 +577,7 @@ export default {
     },
     // 隐藏筛选侧边
     hideSide: function() {
-      if (app.isMidSmallScreen() && this.is_show_side) {
+      if (this.$parent.isMidSmallScreen() && this.is_show_side) {
         this.stopSideAnimate();
         this.is_show_side = false;
         Velocity(this.$refs.js_filter_container, {
@@ -602,7 +602,7 @@ export default {
     // 切换排序方式
     changeSortWay: function(index, way) {
       this.changeSelectedColor(index);
-      app.addProperty("sort", way);
+      this.$parent.addProperty("sort", way);
     },
     // 改变被选中的排序按钮的颜色
     changeSelectedColor: function(index) {
@@ -614,6 +614,10 @@ export default {
         this.sort_item[i].is_select = false;
       }
       this.sort_item[index].is_select = true;
+    },
+    // 显示加载动画
+    showLoading() {
+      this.is_loading = true;
     },
     test: function() {
       console.log("111");
@@ -1137,12 +1141,12 @@ export default {
   }
 }
 .filter_box .loading_text {
-    position: relative;
-    display: block;
-    width: 100%;
-    margin-top: 10px;
-    color: #666666;
-    text-align: center;
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  color: #666666;
+  text-align: center;
 }
 /* -----------------------------------------------筛选   结束----------------------------------- */
 </style>
