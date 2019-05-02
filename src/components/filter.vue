@@ -5,7 +5,7 @@
     <div class="filter_container" ref="js_filter_container">
       <div class="btn_top_container">
         <!-- 分类选择  START -->
-        <div class="select_box js_catalog_box">
+        <div class="select_box">
           <span class="name">分类</span>
           <ul>
             <!--  -->
@@ -132,7 +132,7 @@
         </li>
         <!-- "列表显示切换,992及以上不显示" -->
         <li class="btn list_toggle">
-          <a @click="toggleList">
+          <a @click="toggleIcon">
             <i v-show="toggle_list.is_first_icon" class="icon-font i-list-index"></i>
             <i v-show="!toggle_list.is_first_icon" class="icon-font i-calendar-2"></i>
           </a>
@@ -144,7 +144,7 @@
       </ul>
       <!--  -->
       <!-- 遮罩,弹出擦边栏时防止误触 -->
-      <div v-show="is_show_side" ref="js_shade" class="shade"></div>
+      <div v-show="is_show_side" class="shade"></div>
     </div>
     <!-- 排序方式   end -->
     <!-- 加载动画 -->
@@ -363,7 +363,10 @@ export default {
         index_temp = -index_temp;
         this.$parent.deleteProperty(this.filter_items[index_temp - 1].an_name);
       } else {
-        this.$parent.addProperty(this.filter_items[index_temp - 1].an_name, "1");
+        this.$parent.addProperty(
+          this.filter_items[index_temp - 1].an_name,
+          "1"
+        );
       }
     },
     // 重置
@@ -372,14 +375,11 @@ export default {
       this.resetMultiSelect();
       this.resetInput();
       this.$parent.resetAjaxPars();
-      // 未完成  start
+      // 返回顶部
       window.scrollTo(0, 0);
-      if (js_goods_area.can_ajax) {
-        //清空加载
-        loadGoods("");
-      }
+      //清空加载
+      this.$parent.loadGoods("");
       console.log("Clear");
-      // 未完成  end
     },
     //重置目录
     resetCatalogItem: function() {
@@ -409,9 +409,9 @@ export default {
       // 不明白为什么有这句
       // this.deleteInputValue();
       this.addInputValue();
-      if (js_goods_area.can_ajax && this.checkInputIsNotEmpty()) {
+      if (this.checkInputIsNotEmpty()) {
         //确认 加载
-        loadGoods("input");
+        this.$parent.loadGoods("input");
       }
       console.log("Confirm");
     },
@@ -485,7 +485,12 @@ export default {
     },
     //从ajax_pars中删除input
     deleteInputValue: function() {
-      this.$parent.deletePropertyNoAjax(["sale_num", "dsr", "start_price", "end_price"]);
+      this.$parent.deletePropertyNoAjax([
+        "sale_num",
+        "dsr",
+        "start_price",
+        "end_price"
+      ]);
     },
     //向ajax_pars中添加input值
     addInputValue: function() {
@@ -560,9 +565,9 @@ export default {
       });
     },
     // 切换列表显示方式
-    toggleList: function() {
+    toggleIcon: function() {
       this.toggle_list.is_first_icon = !this.toggle_list.is_first_icon;
-      js_goods_area.toggle_list = !js_goods_area.toggle_list;
+      this.$parent.$refs.Goods.toggleList();
     },
     // 显示筛选侧边
     showSide: function() {
@@ -619,7 +624,7 @@ export default {
     showLoading() {
       this.is_loading = true;
     },
-    closeLoading(){
+    closeLoading() {
       this.is_loading = false;
     },
     test: function() {
@@ -1149,6 +1154,7 @@ export default {
   width: 100%;
   margin-top: 10px;
   color: #666666;
+  font-size: 15px;
   text-align: center;
 }
 /* -----------------------------------------------筛选   结束----------------------------------- */

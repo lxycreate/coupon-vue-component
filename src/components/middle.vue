@@ -39,11 +39,15 @@ export default {
   },
   created: function() {},
   mounted: function() {
-    console.log(this.base_url);
     this.initAjaxPars();
     this.loadGoods("");
   },
   methods: {
+    // 重置当前页码
+    resetPageNum() {
+      this.page_num = 1;
+      this.addPropertyNoAjax({ page_num: this.page_num });
+    },
     // 初始化ajax_pars
     initAjaxPars: function() {
       this.ajax_pars = {};
@@ -77,14 +81,15 @@ export default {
     // 向ajax_pars中添加参数
     addProperty: function(pro_name, pro_value) {
       if (pro_name != undefined && pro_value != undefined && this.can_ajax) {
-        // loadGoods(pro_name);
+        this.ajax_pars[pro_name] = pro_value;
+        this.loadGoods(pro_name);
       }
     },
     // 从ajax_pars中删除属性
     deleteProperty: function(pro_name) {
       if (this.ajax_pars.hasOwnProperty(pro_name) && this.can_ajax) {
         delete this.ajax_pars[pro_name];
-        // loadGoods(pro_name);
+        this.loadGoods(pro_name);
       }
     },
     // 向ajax_pars中添加参数但是不进行ajax请求
@@ -121,11 +126,7 @@ export default {
         // 隐藏商品组件中的"没有更多了..."提示
         this.$refs.Goods.hideNomoreTip();
         // 筛选时显示"加载中..."
-        // js_goods_area.is_loading = true;
         this.$refs.FilterComponent.showLoading();
-        // if (pro_name != "sort") {
-        //   js_filter_container.is_loading = true;
-        // }
         setTimeout(() => {
           this.getGoods(this.taskData);
         }, 300);
@@ -133,6 +134,7 @@ export default {
     },
     // 获取商品数据
     getGoods: function(callback) {
+      console.log(this.ajax_pars);
       Axios({
         url: this.base_url + "/getGoods",
         method: "get",
@@ -141,6 +143,7 @@ export default {
         .then(response => {
           //处理返回的数据
           callback(response);
+          console.log(response.data.goods);
           //可以加载下一页
           this.can_ajax = true;
         })
@@ -205,7 +208,7 @@ export default {
     // 清空当前商品列表
     clearListItems() {
       this.goods_list = [];
-      this.initAjaxPars();
+      this.resetPageNum();
     }
     //
   }

@@ -2,7 +2,7 @@
   <!-- 商品区域   START -->
   <div class="goods_area" v-bind:class="{toggle_goods_area:toggle_list}" v-cloak>
     <!-- 商品列表   START -->
-    <ul class="goods_list js_goods_list" v-bind:class="{toggle_goods_list:toggle_list}">
+    <ul class="goods_list" v-bind:class="{toggle_goods_list:toggle_list}">
       <li
         v-for="(item,index) in goods_list"
         v-bind:class="{toggle_li:toggle_list}"
@@ -132,13 +132,19 @@ export default {
     // this.goods_list[0].item = 1;
   },
   methods: {
+    // 显示‘没有更多了...’提示
     showNomoreTip() {
       this.is_more_goods = false;
     },
     // 隐藏没有更多商品的提示
     hideNomoreTip() {
       this.is_more_goods = true;
+    },
+    // 切换列表显示方式
+    toggleList() {
+      this.toggle_list = !this.toggle_list;
     }
+    // 
   }
 };
 </script>
