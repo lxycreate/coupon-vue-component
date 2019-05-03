@@ -9,7 +9,7 @@
 import FilterComponent from "./filter.vue";
 import Goods from "./goods.vue";
 import Axios from "axios";
-// import 'axios';
+
 export default {
   name: "MiddleComponent",
   components: {
@@ -167,11 +167,12 @@ export default {
       // 判断返回的数据是否等于每页数据量(如果是，说明还有下一页,否则没有)
       if (response.data.goods.length == this.page_size) {
         this.is_more_goods = true;
+        this.$refs.Goods.hideNomoreTip();
       } else {
         // 保证加载动画结束后才出现"没有更多了..."提示
         setTimeout(() => {
           this.is_more_goods = false;
-          this.$refs.Goods.hideNomoreTip();
+          this.$refs.Goods.showNomoreTip();
         }, 300);
       }
       // 将返回的商品数据装入Vue对象中的数组中,显示到界面中
@@ -203,12 +204,29 @@ export default {
     // 关闭动画
     closeLoading() {
       this.$refs.FilterComponent.closeLoading();
-      this.$refs.Goods.hideNomoreTip();
+      this.$refs.Goods.hideLoadingMore();
+      // this.
     },
     // 清空当前商品列表
     clearListItems() {
       this.goods_list = [];
       this.resetPageNum();
+    },
+    // 加载下一页
+    loadNextPage() {
+      if (this.can_ajax&&this.is_more_goods) {
+        this.can_ajax = false;
+        //清空数组标志
+        this.clear_list_flag = false;
+        // 显示加载动画
+        this.$refs.Goods.showLoadingMore();
+        // 添加属性
+        this.addPropertyNoAjax({ page_num: this.page_num + 1 });
+        setTimeout(() => {
+          this.getGoods(this.taskData);
+          this.page_num = this.page_num + 1;
+        }, 600);
+      }
     }
     //
   }

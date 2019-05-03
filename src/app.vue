@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <HeaderComponent ref="HeaderComponent"/>
-    <MiddleComponent/>
+    <MiddleComponent ref="MiddleComponent"/>
     <FooterComponent/>
   </div>
 </template>
@@ -20,19 +20,16 @@ export default {
   },
   props: {},
   data: function() {
-    return {
-    };
+    return {};
   },
-  created: function() {
-  },
-  mounted:function(){
+  created: function() {},
+  mounted: function() {
     this.listenScrollUpDown();
   },
   methods: {
     // 监听上下滚动事件
     listenScrollUpDown: function() {
-      var _self = this;
-      window.onscroll = function() {
+      window.onscroll = () => {
         // 滚动条距离顶部的高度
         var scroll_top =
           document.documentElement.scrollTop || window.pageYOffset;
@@ -41,20 +38,30 @@ export default {
         // 搜索框吸顶  start
         // 解除吸顶
         if (scroll_top < 100) {
-          _self.$refs.HeaderComponent.unfixedSearchInput();
+          this.$refs.HeaderComponent.unfixedSearchInput();
         }
         // 大屏幕搜索框吸顶
         if (client_width >= 992 && scroll_top >= 100) {
-          _self.$refs.HeaderComponent.fixedSearchInputLarge();
+          this.$refs.HeaderComponent.fixedSearchInputLarge();
         }
         // 小屏幕搜索框吸顶
         if (client_width < 992 && scroll_top > 120) {
-          _self.$refs.HeaderComponent.fixedSearchInputSmall();
+          this.$refs.HeaderComponent.fixedSearchInputSmall();
         }
         // 搜索框吸顶   end
+
+        // 滚动到底部加载更多数据   start
+        // 可视区的高度
+        var window_height = document.documentElement.clientHeight;
+        //滚动条的总高度
+        var scroll_height = document.documentElement.scrollHeight;
+        if (scroll_top + window_height + 1 >= scroll_height) {
+          this.$refs.MiddleComponent.loadNextPage();
+        }
+        // 滚动到底部加载更多数据   end
       };
-    },
-    
+    }
+    //
   }
   //
 };

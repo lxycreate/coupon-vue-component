@@ -139,6 +139,14 @@ export default {
     hideNomoreTip() {
       this.is_more_goods = true;
     },
+    // 显示正在加载更多提示
+    showLoadingMore(){
+      this.is_loading_more = true;
+    },
+    // 隐藏正在加载更多提示
+    hideLoadingMore(){
+      this.is_loading_more = false;
+    },
     // 切换列表显示方式
     toggleList() {
       this.toggle_list = !this.toggle_list;
