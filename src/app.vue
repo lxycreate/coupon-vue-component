@@ -78,3 +78,21 @@ export default {
   //
 };
 </script>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "微软雅黑";
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+#app {
+  position: relative;
+  margin: auto;
+}
+</style>
