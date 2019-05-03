@@ -2,19 +2,22 @@
   <div class="middle">
     <FilterComponent ref="FilterComponent"/>
     <Goods ref="Goods" :goods_list="goods_list"></Goods>
+    <ToTop :is_show_totop="is_show_totop" v-on:scrollToTop="scrollToTop"></ToTop>
   </div>
 </template>
 
 <script>
 import FilterComponent from "./filter.vue";
 import Goods from "./goods.vue";
+import ToTop from "./totop.vue";
 import Axios from "axios";
 
 export default {
   name: "MiddleComponent",
   components: {
     FilterComponent,
-    Goods
+    Goods,
+    ToTop
   },
   props: {},
   data: function() {
@@ -34,7 +37,9 @@ export default {
       // 请求地址
       base_url: "http://localhost:8088",
       // 是否还有更多商品
-      is_more_goods: true
+      is_more_goods: true,
+      // 是否显示返回顶部按钮
+      is_show_totop: false
     };
   },
   created: function() {},
@@ -227,6 +232,29 @@ export default {
           this.page_num = this.page_num + 1;
         }, 600);
       }
+    },
+    // 显示返回顶部按钮
+    showToTop() {
+      if (!this.is_show_totop) {
+        this.is_show_totop = true;
+      }
+    },
+    // 隐藏返回顶部按钮
+    hideToTop() {
+      if (this.is_show_totop) {
+        this.is_show_totop = false;
+      }
+    },
+    // 滚动到顶部
+    scrollToTop() {
+      Velocity(
+        document.documentElement,
+        "scroll",
+        {
+          offset: 0
+        },
+        2000
+      );
     }
     //
   }

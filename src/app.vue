@@ -23,7 +23,7 @@ export default {
     return {};
   },
   created: function() {
-     window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
   },
   mounted: function() {
     this.listenScrollUpDown();
@@ -61,6 +61,13 @@ export default {
           this.$refs.MiddleComponent.loadNextPage();
         }
         // 滚动到底部加载更多数据   end
+        // 滚动到顶部   start
+        if (scroll_top > window_height) {
+          this.$refs.MiddleComponent.showToTop();
+        } else {
+          this.$refs.MiddleComponent.hideToTop();
+        }
+        // 滚动到顶部   end
       };
     }
     //
