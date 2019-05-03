@@ -24,9 +24,9 @@
     <!-- 按钮   START -->
     <div class="header_btns">
       <p class="btn_box">
-        <a class="cur all" href="main.html">全网商品</a>
-        <a class="bargain" href="bargain.html">特惠商品</a>
-        <a class="hundred" href="hundred.html">百元精品</a>
+        <a class="cur all" href="./index.html">全网商品</a>
+        <a class="bargain" href="./bargain.html">特惠商品</a>
+        <a class="hundred" href="./hundred.html">百元精品</a>
       </p>
     </div>
 

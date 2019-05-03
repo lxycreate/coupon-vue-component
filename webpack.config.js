@@ -9,13 +9,28 @@ module.exports = {
     output: {
         //node.js中__dirname变量获取当前模块文件所在目录的完整绝对路径 
         path: basePath.join(__dirname, 'dist'), //输出位置
-        filename: './images/index.js' //输出文件
+        filename: './images/base.js' //输出文件
     },
     plugins: [
         // 没有这个无法实现热更新
         new HtmlWebpackPlugin({
             template: './src/static/index.html',
             filename: './static/index.html',
+            // favicon:'./src/images/favicon.ico'
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/static/bargain.html',
+            filename: './static/bargain.html',
+            // favicon:'./src/images/favicon.ico'
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/static/hundred.html',
+            filename: './static/hundred.html',
+            // favicon:'./src/images/favicon.ico'
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/static/search.html',
+            filename: './static/search.html',
             // favicon:'./src/images/favicon.ico'
         }),
         // 热更新模块
@@ -75,7 +90,7 @@ module.exports = {
         ignored: /node_modules/
     },
     devServer: {
-        contentBase: basePath.join(__dirname, "dist"), // 设置服务器目录
+        contentBase: basePath.join(__dirname, "dist/static/"), // 设置服务器目录
         port: 8080,
         open: true, // 自动开启浏览器
         inline: true, // inline模式热更新
