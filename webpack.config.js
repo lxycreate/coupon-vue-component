@@ -4,33 +4,46 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 module.exports = {
-    entry: './src/images/index.js', //入口文件
+    entry: {
+        base: "./src/images/base.js",
+        detail: "./src/images/detail.js"
+    },
     mode: 'development',
     output: {
         //node.js中__dirname变量获取当前模块文件所在目录的完整绝对路径 
         path: basePath.join(__dirname, 'dist'), //输出位置
-        filename: './images/base.js' //输出文件
+        filename: './images/[name].js' //输出文件
     },
     plugins: [
         // 没有这个无法实现热更新
         new HtmlWebpackPlugin({
+            chunks: ["base"],
             template: './src/static/index.html',
             filename: './static/index.html',
             // favicon:'./src/images/favicon.ico'
         }),
         new HtmlWebpackPlugin({
+            chunks: ["base"],
             template: './src/static/bargain.html',
             filename: './static/bargain.html',
             // favicon:'./src/images/favicon.ico'
         }),
         new HtmlWebpackPlugin({
+            chunks: ["base"],
             template: './src/static/hundred.html',
             filename: './static/hundred.html',
             // favicon:'./src/images/favicon.ico'
         }),
         new HtmlWebpackPlugin({
+            chunks: ["base"],
             template: './src/static/search.html',
             filename: './static/search.html',
+            // favicon:'./src/images/favicon.ico'
+        }),
+        new HtmlWebpackPlugin({
+            chunks: ["detail"],
+            template: './src/static/detail.html',
+            filename: './static/detail.html',
             // favicon:'./src/images/favicon.ico'
         }),
         // 热更新模块

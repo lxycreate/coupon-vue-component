@@ -140,11 +140,11 @@ export default {
       this.is_more_goods = true;
     },
     // 显示正在加载更多提示
-    showLoadingMore(){
+    showLoadingMore() {
       this.is_loading_more = true;
     },
     // 隐藏正在加载更多提示
-    hideLoadingMore(){
+    hideLoadingMore() {
       this.is_loading_more = false;
     },
     // 切换列表显示方式
@@ -158,6 +158,10 @@ export default {
     // 隐藏弹层
     hideLayer: function(item) {
       Vue.set(item, "is_show_yun", false);
+    },
+    // 转到详情页
+    goToDetail(goods_id) {
+      window.location.href = "detail.html?goods_id=" + goods_id;
     }
     //
   }
