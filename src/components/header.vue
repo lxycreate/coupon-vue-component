@@ -49,9 +49,29 @@ export default {
       search_word: ""
     };
   },
-  created: function() {
-  },
+  created: function() {},
   methods: {
+    // 初始化
+    initSearch() {
+      var temp = decodeURI(window.location.search);
+      var word = temp.substring(8, temp.length);
+      console.log(word);
+      // 加上这个后退异常
+      var url = window.location.href;
+      var valiable = url.split("?")[0];
+      window.history.pushState({}, 0, valiable);
+      // 加上这个后退异常
+      if (word.length > 0 && word != undefined && word != "all") {
+        this.search_word = word;
+        this.callFuncByBus("callAddPropertyNoAjax", { word: this.search_word });
+        return true;
+      }
+      return false;
+    },
+    // 通过bus调用功能
+    callFuncByBus(func_name, obj) {
+      bus.$emit(func_name, obj);
+    },
     // 搜索
     search: function() {
       if (now_page_name != "search" && this.search_word != "") {
@@ -63,7 +83,7 @@ export default {
         app.addProperty("word", this.search_word);
       }
       if (now_page_name == "search" && this.search_word == "") {
-        app.addPropertyNoAjax({word:''});
+        app.addPropertyNoAjax({ word: "" });
         app.deleteProperty("word");
       }
     },

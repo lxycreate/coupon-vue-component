@@ -45,7 +45,10 @@ export default {
   created: function() {},
   mounted: function() {
     this.initAjaxPars();
-    this.loadGoods("");
+    // 监听其他组件调用该事件
+    bus.$on("callAddPropertyNoAjax", msg => {
+      this.addProperty(msg);
+    });
   },
   methods: {
     // 重置当前页码

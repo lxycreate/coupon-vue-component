@@ -27,6 +27,9 @@ export default {
   },
   mounted: function() {
     this.listenScrollUpDown();
+    if (!this.$refs.HeaderComponent.initSearch()) {
+      this.$refs.MiddleComponent.loadGoods("");
+    }
   },
   methods: {
     // 监听上下滚动事件
