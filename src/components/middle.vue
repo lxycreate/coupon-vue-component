@@ -118,9 +118,10 @@ export default {
     },
     // 加载商品
     loadGoods: function(pro_name) {
-      //重置页码
       if (this.can_ajax) {
         this.can_ajax = false;
+        //重置页码
+        this.resetPageNum();
         //清空数组标志
         this.clear_list_flag = true;
         // 隐藏商品组件中的"没有更多了..."提示
@@ -210,11 +211,10 @@ export default {
     // 清空当前商品列表
     clearListItems() {
       this.goods_list = [];
-      this.resetPageNum();
     },
     // 加载下一页
     loadNextPage() {
-      if (this.can_ajax&&this.is_more_goods) {
+      if (this.can_ajax && this.is_more_goods) {
         this.can_ajax = false;
         //清空数组标志
         this.clear_list_flag = false;

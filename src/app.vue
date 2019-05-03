@@ -22,7 +22,9 @@ export default {
   data: function() {
     return {};
   },
-  created: function() {},
+  created: function() {
+     window.scrollTo(0, 0);
+  },
   mounted: function() {
     this.listenScrollUpDown();
   },
