@@ -63,7 +63,10 @@ export default {
       // 加上这个后退异常
       if (word.length > 0 && word != undefined && word != "all") {
         this.search_word = word;
-        this.callFuncByBus("callAddPropertyNoAjax", { word: this.search_word });
+        this.$parent.$refs.MiddleComponent.addProperty(
+          "word",
+          this.search_word
+        );
         return true;
       }
       return false;
@@ -79,12 +82,15 @@ export default {
           "search.html?search=" + encodeURI(this.search_word);
       }
       if (now_page_name == "search" && this.search_word != "") {
-        app.scrollToTopDirect();
-        app.addProperty("word", this.search_word);
+        window.scrollTo(0, 0);
+        this.$parent.$refs.MiddleComponent.addProperty(
+          "word",
+          this.search_word
+        );
       }
       if (now_page_name == "search" && this.search_word == "") {
-        app.addPropertyNoAjax({ word: "" });
-        app.deleteProperty("word");
+        this.$parent.$refs.MiddleComponent.addPropertyNoAjax({ word: "" });
+        this.$parent.$refs.MiddleComponent.deleteProperty("word");
       }
     },
     // 大屏幕吸顶搜索框

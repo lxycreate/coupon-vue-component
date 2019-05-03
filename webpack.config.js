@@ -16,6 +16,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/static/index.html',
             filename: './static/index.html',
+            // favicon:'./src/images/favicon.ico'
         }),
         // 热更新模块
         new webpack.HotModuleReplacementPlugin(),
