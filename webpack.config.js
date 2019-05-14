@@ -61,9 +61,10 @@ module.exports = {
                 use: [{
                     loader: "url-loader",
                     options: {
+                        publicPath: "../images/",
                         name: "[name].[ext]",
                         limit: 1024, // size <= 1kib
-                        outputPath: "images"
+                        outputPath: "./images/"
                     }
                 }]
             }, {
@@ -91,9 +92,10 @@ module.exports = {
                 use: [{
                     loader: "url-loader",
                     options: {
+                        publicPath: "../images/fonts/",
                         name: "[name].[ext]",
                         limit: 5000, // fonts file size <= 5KB, use 'base64'; else, output svg file
-                        outputPath: "images/fonts/"
+                        outputPath: "./images/fonts/"
                     }
                 }]
             }
@@ -103,7 +105,7 @@ module.exports = {
         ignored: /node_modules/
     },
     devServer: {
-        contentBase: basePath.join(__dirname, "dist/static/"), // 设置服务器目录
+        contentBase: basePath.join(__dirname, "/dist/"), // 设置服务器目录
         port: 8080,
         open: true, // 自动开启浏览器
         inline: true, // inline模式热更新
